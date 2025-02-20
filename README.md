@@ -22,3 +22,17 @@ Keycloak, Kafka Streams, ELK-stack.
 | Java 11 | Java 17 |
 | Spring Boot 2.3.4 | Spring Boot 3.5.0 |
 | Logback | Log4g2 |
+
+---
+В папку resources сервиса `twitter-to-kafka-service` следует поместить конфигурационный файл twitter4j.properties.
+Пример файла:
+
+```properties
+debug=true
+oauth.consumerKey=*********************
+oauth.consumerSecret=******************************************
+oauth.accessToken=**************************************************
+oauth.accessTokenSecret=******************************************
+```
+
+Ключи и токены можно получить в аккаунте разработчика социальной сети X (ex-Twitter).
