@@ -26,7 +26,8 @@ public class TwitterKafkaStreamRunner implements StreamRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(TwitterKafkaStreamRunner.class);
 
     @Override
-    public void start() throws TwitterException {
+    public void start() {
+        // it doesn't work free X (ex-Twitter) account
         twitterStream = new TwitterStreamFactory().getInstance();
         twitterStream.addListener(listener);
 
