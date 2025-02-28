@@ -22,6 +22,7 @@ Keycloak, Kafka Streams, ELK-stack.
 | Java 11 | Java 17 |
 | Spring Boot 2.3.4 | Spring Boot 3.5.0 |
 | Logback | Log4g2 |
+| Apache Httpclient | Apache Httpclient5 |
 
 ## twitter-to-kafka-service
 
