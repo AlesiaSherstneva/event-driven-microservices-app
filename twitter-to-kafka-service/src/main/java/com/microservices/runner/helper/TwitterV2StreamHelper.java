@@ -56,7 +56,7 @@ public class TwitterV2StreamHelper {
             """;
     private static final String TWITTER_STATUS_DATE_FORMAT = "EEE MMM dd HH:mm:ss zzz yyyy";
 
-    void connectStream(String bearerToken) throws IOException, URISyntaxException {
+    public void connectStream(String bearerToken) throws IOException, URISyntaxException {
         try (CloseableHttpClient httpClient = HttpClients.custom()
                 .setDefaultRequestConfig(RequestConfig.custom()
                         .setCookieSpec(StandardCookieSpec.RELAXED).build())
@@ -97,7 +97,7 @@ public class TwitterV2StreamHelper {
         }
     }
 
-    void setupRules(String bearerToken, Map<String, String> rules) throws IOException, URISyntaxException {
+    public void setupRules(String bearerToken, Map<String, String> rules) throws IOException, URISyntaxException {
         List<String> existingRules = getRules(bearerToken);
 
         if (existingRules.size() > 0) {
@@ -178,7 +178,7 @@ public class TwitterV2StreamHelper {
                 final HttpEntity entity = response.getEntity();
                 if (entity != null) {
                     JSONObject json = new JSONObject(EntityUtils.toString(entity, "UTF-8"));
-                    if (json.length() > 1) {
+                    if (json.length() > 1 && json.has("data")) {
                         JSONArray jsonArray = (JSONArray) json.get("data");
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject jsonObject = (JSONObject) jsonArray.get(i);
