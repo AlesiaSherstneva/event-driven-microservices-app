@@ -7,6 +7,7 @@ import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
 import twitter4j.FilterQuery;
 import twitter4j.TwitterStream;
@@ -16,6 +17,7 @@ import java.util.Arrays;
 
 @Component
 @RequiredArgsConstructor
+@ConditionalOnExpression("${twitter-to-kafka-service.enable-mock-tweets} && not ${twitter-to-kafka-service.enable-v2-tweets}")
 public class TwitterKafkaStreamRunner implements StreamRunner {
     private final TwitterToKafkaConfig config;
     private final TwitterKafkaStatusListener listener;
@@ -26,7 +28,7 @@ public class TwitterKafkaStreamRunner implements StreamRunner {
 
     @Override
     public void start() {
-        // it doesn't work free X (ex-Twitter) account
+        // it doesn't work with free X (ex-Twitter) account
         twitterStream = new TwitterStreamFactory().getInstance();
         twitterStream.addListener(listener);
 
