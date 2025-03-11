@@ -75,7 +75,6 @@ public class TwitterV2StreamHelper {
                     String nextLine = reader.readLine();
 
                     while (nextLine != null) {
-                        nextLine = reader.readLine();
                         if (!nextLine.isEmpty()) {
                             String tweet = getFormattedTweet(nextLine);
 
@@ -90,6 +89,7 @@ public class TwitterV2StreamHelper {
                                 listener.onStatus(status);
                             }
                         }
+                        nextLine = reader.readLine();
                     }
                 }
                 return null;
