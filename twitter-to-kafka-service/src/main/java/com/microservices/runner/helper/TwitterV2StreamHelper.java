@@ -48,9 +48,9 @@ public class TwitterV2StreamHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(TwitterV2StreamHelper.class);
     private static final String TWEET_AS_RAW_JSON = """
             {
-                "created_at": {0},
+                "created_at": "{0}",
                 "id": {1},
-                "text": {2},
+                "text": "{2}",
                 "user": {
                     "id": {3}
                 }
