@@ -29,20 +29,20 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- include log4g2 -->
+        <!-- include log4j2 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-log4j2</artifactId>
         </dependency>
 
         <dependency>
+            <groupId>com.microservices</groupId>
+            <artifactId>app-config-data</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.twitter4j</groupId>
             <artifactId>twitter4j-stream</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
