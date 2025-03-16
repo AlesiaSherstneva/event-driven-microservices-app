@@ -26,6 +26,7 @@ Keycloak, Kafka Streams, ELK-stack.
 | Spring Boot 2.3.4 | Spring Boot 3.5.0 |
 | Logback | Log4j2 |
 | Apache Httpclient | Apache Httpclient5 |
+| Apache Kafka + Zookeeper | Apache Kafka KRaft mode |
 
 ## twitter-to-kafka-service
 
