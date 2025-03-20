@@ -1,5 +1,5 @@
 .idea
 *.iml
 /target
-/*/target
+/**/target
 /twitter-to-kafka-service/src/main/resources/twitter4j.properties
