@@ -20,6 +20,7 @@
         <module>twitter-to-kafka-service</module>
         <module>app-config-data</module>
         <module>kafka</module>
+        <module>common-config</module>
     </modules>
 
     <properties>
@@ -31,6 +32,8 @@
         <httpclient5.version>5.5</httpclient5.version>
         <json.version>20250517</json.version>
         <avro.version>1.12.0</avro.version>
+        <spring-kafka.version>4.0.0-M2</spring-kafka.version>
+        <spring-retry.version>2.0.12</spring-retry.version>
     </properties>
 
     <dependencyManagement>
@@ -40,10 +43,30 @@
                 <artifactId>spring-boot-starter</artifactId>
                 <version>${spring-boot.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.springframework.kafka</groupId>
+                <artifactId>spring-kafka</artifactId>
+                <version>${spring-kafka.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.retry</groupId>
+                <artifactId>spring-retry</artifactId>
+                <version>${spring-retry.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-webflux</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.microservices</groupId>
                 <artifactId>app-config-data</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.microservices</groupId>
+                <artifactId>common-config</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
