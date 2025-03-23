@@ -1,6 +1,6 @@
 package com.microservices;
 
-import com.microservices.config.TwitterToKafkaConfig;
+import com.microservices.config.TwitterToKafkaConfigData;
 import com.microservices.runner.StreamRunner;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -15,7 +15,7 @@ import java.util.Arrays;
 @SpringBootApplication
 @AllArgsConstructor
 public class TwitterToKafkaServiceApplication implements CommandLineRunner {
-    private final TwitterToKafkaConfig twitterToKafkaConfig;
+    private final TwitterToKafkaConfigData twitterToKafkaConfigData;
     private final StreamRunner streamRunner;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TwitterToKafkaServiceApplication.class);
@@ -28,7 +28,7 @@ public class TwitterToKafkaServiceApplication implements CommandLineRunner {
     public void run(String... args) throws TwitterException {
         LOGGER.info("The application is started");
         LOGGER.info(Arrays.toString(
-            twitterToKafkaConfig.getTwitterKeywords().toArray(new String[]{})
+            twitterToKafkaConfigData.getTwitterKeywords().toArray(new String[]{})
         ));
 
         streamRunner.start();

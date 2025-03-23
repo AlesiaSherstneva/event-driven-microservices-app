@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "twitter-to-kafka-service")
-public class TwitterToKafkaConfig {
+public class TwitterToKafkaConfigData {
     private List<String> twitterKeywords;
     private String twitterV2BaseUrl;
     private String twitterV2RulesBaseUrl;

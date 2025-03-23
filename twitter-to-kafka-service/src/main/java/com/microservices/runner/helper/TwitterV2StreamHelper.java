@@ -1,6 +1,6 @@
 package com.microservices.runner.helper;
 
-import com.microservices.config.TwitterToKafkaConfig;
+import com.microservices.config.TwitterToKafkaConfigData;
 import com.microservices.listener.TwitterKafkaStatusListener;
 import lombok.RequiredArgsConstructor;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
@@ -42,7 +42,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @ConditionalOnExpression("${twitter-to-kafka-service.enable-v2-tweets} && not ${twitter-to-kafka-service.enable-mock-tweets}")
 public class TwitterV2StreamHelper {
-    private final TwitterToKafkaConfig config;
+    private final TwitterToKafkaConfigData config;
     private final TwitterKafkaStatusListener listener;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TwitterV2StreamHelper.class);

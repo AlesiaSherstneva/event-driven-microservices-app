@@ -1,6 +1,6 @@
 package com.microservices.runner.impl;
 
-import com.microservices.config.TwitterToKafkaConfig;
+import com.microservices.config.TwitterToKafkaConfigData;
 import com.microservices.listener.TwitterKafkaStatusListener;
 import com.microservices.runner.StreamRunner;
 import jakarta.annotation.PreDestroy;
@@ -19,7 +19,7 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 @ConditionalOnExpression("not ${twitter-to-kafka-service.enable-mock-tweets} && not ${twitter-to-kafka-service.enable-v2-tweets}")
 public class TwitterKafkaStreamRunner implements StreamRunner {
-    private final TwitterToKafkaConfig config;
+    private final TwitterToKafkaConfigData config;
     private final TwitterKafkaStatusListener listener;
 
     private TwitterStream twitterStream;

@@ -1,6 +1,6 @@
 package com.microservices.runner.impl;
 
-import com.microservices.config.TwitterToKafkaConfig;
+import com.microservices.config.TwitterToKafkaConfigData;
 import com.microservices.exception.TwitterToKafkaException;
 import com.microservices.listener.TwitterKafkaStatusListener;
 import com.microservices.runner.StreamRunner;
@@ -23,7 +23,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @Component
 @RequiredArgsConstructor
 public class MockKafkaStreamRunner implements StreamRunner {
-    private final TwitterToKafkaConfig config;
+    private final TwitterToKafkaConfigData config;
     private final TwitterKafkaStatusListener listener;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MockKafkaStreamRunner.class);
