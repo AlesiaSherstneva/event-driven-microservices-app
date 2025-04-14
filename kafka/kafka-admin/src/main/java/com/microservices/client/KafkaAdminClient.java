@@ -52,7 +52,7 @@ public class KafkaAdminClient {
 
         int retryCount = 1;
         Integer maxRetry = retryConfigData.getMaxAttempts();
-        int multiplier = retryConfigData.getMultiplayer().intValue();
+        int multiplier = retryConfigData.getMultiplier().intValue();
         Long sleepTimeMs = retryConfigData.getSleepTimeMs();
 
         for (String topic : kafkaConfigData.getTopicNamesToCreate()) {
@@ -68,7 +68,7 @@ public class KafkaAdminClient {
     public void checkSchemaRegistry() {
         int retryCount = 1;
         Integer maxRetry = retryConfigData.getMaxAttempts();
-        int multiplier = retryConfigData.getMultiplayer().intValue();
+        int multiplier = retryConfigData.getMultiplier().intValue();
         Long sleepTimeMs = retryConfigData.getSleepTimeMs();
 
         while (!getSchemaRegistryStatus().is2xxSuccessful()) {

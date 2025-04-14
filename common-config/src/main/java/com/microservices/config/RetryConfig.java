@@ -19,7 +19,7 @@ public class RetryConfig {
         ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
         backOffPolicy.setInitialInterval(configData.getInitialIntervalMs());
         backOffPolicy.setMaxInterval(configData.getMaxIntervalMs());
-        backOffPolicy.setMultiplier(configData.getMultiplayer());
+        backOffPolicy.setMultiplier(configData.getMultiplier());
 
         retryTemplate.setBackOffPolicy(backOffPolicy);
 
