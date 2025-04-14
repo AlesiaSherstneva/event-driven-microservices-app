@@ -24,6 +24,7 @@ Keycloak, Kafka Streams, ELK-stack.
 |:-:|:-:|
 | Java 11 | Java 17 |
 | Spring Boot 2.3.4 | Spring Boot 3.5.0 |
+| Spring Cloud 2.2.6.RELEASE | Spring Cloud 4.3.0 |
 | Logback | Log4j2 |
 | Apache Httpclient | Apache Httpclient5 |
 | Apache Kafka + Zookeeper | Apache Kafka KRaft mode |
