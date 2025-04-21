@@ -13,6 +13,6 @@ spring:
       fail-fast: true
 
 logging:
+  config: "classpath:log4j2-common.xml"
   level:
-    root: info
     org.springframework.cloud.config: debug

@@ -1,6 +1,11 @@
+# IntelliJ IDEA generated files
 .idea
 *.iml
 /target
 /**/target
+
+# secret credentials files
 /twitter-to-kafka-service/src/main/resources/twitter4j.properties
-/volumes/
+
+# log files
+/logs/
