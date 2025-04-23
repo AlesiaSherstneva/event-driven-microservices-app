@@ -1,3 +1,14 @@
+spring:
+  application:
+    name: twitter-to-kafka-service
+  profiles:
+    active: twitter_to_kafka
+  config:
+    import: "optional:configserver:http://localhost:8888"
+
+logging:
+  config: "classpath:log4j2-common.xml"
+
 twitter-to-kafka-service:
   twitter-keywords:
     - Java
@@ -44,6 +55,3 @@ kafka-producer-config:
   linger-ms: 5
   request-timeout-ms: 60000
   retry-count: 5
-
-logging:
-  config: "classpath:log4j2-common.xml"

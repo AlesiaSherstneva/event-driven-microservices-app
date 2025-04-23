@@ -10,6 +10,7 @@ spring:
         git:
           uri: file:///D:/work/repository/event-driven-microservices-app/config-server-repository
           clone-on-start: true
+          default-label: main
       fail-fast: true
 
 logging:
