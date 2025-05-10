@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: kafka-to-elastic-service
+  profiles:
+    active: kafka-to-elastic
+  config:
+    import: "optional:configserver:http://localhost:8888"
+
+logging:
+  config: "classpath:log4j2-common.xml"
