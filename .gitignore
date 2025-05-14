@@ -9,3 +9,6 @@
 
 # log files
 /logs/
+
+# docker volumes
+/volumes/

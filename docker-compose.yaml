@@ -1,6 +1,6 @@
 services:
   kafka-1:
-    image: 'bitnami/kafka:3.3.2'
+    image: 'bitnami/kafka:latest'
     container_name: kafka-broker-1
     environment:
       # KRaft settings
@@ -17,10 +17,10 @@ services:
     ports:
       - 9091:9091
     volumes:
-      - ../kafka-volumes/server-1:/bitnami/kafka
+      - .\volumes\kafka\server-1:/bitnami/kafka
 
   kafka-2:
-    image: 'bitnami/kafka:3.3.2'
+    image: 'bitnami/kafka:latest'
     container_name: kafka-broker-2
     environment:
       # KRaft settings
@@ -37,7 +37,7 @@ services:
     ports:
       - 9092:9092
     volumes:
-      - ../kafka-volumes/server-2:/bitnami/kafka
+      - .\volumes\kafka\server-2:/bitnami/kafka
 
   kafka-3:
     image: 'bitnami/kafka:3.3.2'
@@ -57,7 +57,7 @@ services:
     ports:
       - 9093:9093
     volumes:
-      - ../kafka-volumes/server-3:/bitnami/kafka
+      - .\volumes\kafka\server-3:/bitnami/kafka
 
   schema-registry:
     image: confluentinc/cp-schema-registry:latest
@@ -72,3 +72,9 @@ services:
       SCHEMA_REGISTRY_LISTENERS: "http://0.0.0.0:8081"
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "kafka-1:9192,kafka-2:9192,kafka-3:9192"
       SCHEMA_REGISTRY_KAFKASTORE_SECURITY_PROTOCOL: "PLAINTEXT"
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "kafka-topics.sh", "--bootstrap-server", "localhost:9192", "--list" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
