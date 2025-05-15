@@ -11,4 +11,4 @@
 /logs/
 
 # docker volumes
-/volumes/
+/docker-compose/volumes/

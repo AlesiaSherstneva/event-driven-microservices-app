@@ -1,3 +1,4 @@
+name: twitter-kafka-cluster
 services:
   kafka-1:
     image: 'bitnami/kafka:latest'
