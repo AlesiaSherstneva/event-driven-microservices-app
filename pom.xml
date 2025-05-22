@@ -40,6 +40,8 @@
         <kafka-avro-serializer.version>7.9.1</kafka-avro-serializer.version>
         <spring-cloud.version>4.3.0</spring-cloud.version>
         <spring-cloud-dependencies.version>2025.0.0</spring-cloud-dependencies.version>
+        <elastic.version>9.0.3</elastic.version>
+        <elastic-rest.version>7.17.29</elastic-rest.version>
     </properties>
 
     <repositories>
@@ -196,6 +198,17 @@
                 <groupId>org.json</groupId>
                 <artifactId>json</artifactId>
                 <version>${json.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.elasticsearch</groupId>
+                <artifactId>elasticsearch</artifactId>
+                <version>${elastic.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.elasticsearch.client</groupId>
+                <artifactId>elasticsearch-rest-high-level-client</artifactId>
+                <version>${elastic-rest.version}</version>
             </dependency>
 
             <dependency>
