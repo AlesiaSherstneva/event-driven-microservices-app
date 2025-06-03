@@ -151,6 +151,11 @@
                 <artifactId>elastic-model</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.microservices</groupId>
+                <artifactId>elastic-index-client</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.twitter4j</groupId>
