@@ -3,7 +3,11 @@ package com.microservices.consumer.impl;
 import com.microservices.avro.model.TwitterAvroModel;
 import com.microservices.client.KafkaAdminClient;
 import com.microservices.config.KafkaConfigData;
+import com.microservices.config.KafkaConsumerConfigData;
 import com.microservices.consumer.KafkaConsumer;
+import com.microservices.elastic.model.impl.TwitterIndexModel;
+import com.microservices.service.ElasticIndexClient;
+import com.microservices.transformer.AvroToElasticModelTransformer;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +28,9 @@ public class TwitterKafkaConsumer implements KafkaConsumer<Long, TwitterAvroMode
     private final KafkaListenerEndpointRegistry endpointRegistry;
     private final KafkaAdminClient adminClient;
     private final KafkaConfigData configData;
+    private final KafkaConsumerConfigData consumerConfigData;
+    private final AvroToElasticModelTransformer transformer;
+    private final ElasticIndexClient<TwitterIndexModel> indexClient;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TwitterKafkaConsumer.class);
 
@@ -33,11 +40,11 @@ public class TwitterKafkaConsumer implements KafkaConsumer<Long, TwitterAvroMode
 
         LOGGER.info("Topics with names {} are ready for operations", configData.getTopicNamesToCreate().toArray());
 
-        endpointRegistry.getListenerContainer("twitterTopicListener").start();
+        endpointRegistry.getListenerContainer(consumerConfigData.getConsumerGroupId()).start();
     }
 
     @Override
-    @KafkaListener(id = "twitterTopicListener", topics = "${kafka-config.topic-name}")
+    @KafkaListener(id = "${kafka-consumer-config.consumer-group-id}", topics = "${kafka-config.topic-name}")
     public void receive(@Payload List<TwitterAvroModel> messages,
                         @Header(KafkaHeaders.RECEIVED_KEY) List<Integer> keys,
                         @Header(KafkaHeaders.RECEIVED_PARTITION) List<Integer> partitions,
@@ -47,5 +54,9 @@ public class TwitterKafkaConsumer implements KafkaConsumer<Long, TwitterAvroMode
                 messages.size(), keys.toString(), partitions.toString(),
                 offsets.toString(), Thread.currentThread().getId());
 
+        List<TwitterIndexModel> twitterIndexModels = transformer.getElasticModels(messages);
+        List<String> documentIds = indexClient.save(twitterIndexModels);
+
+        LOGGER.info("Documents saved to elasticsearch with ids: {}", documentIds.toArray());
     }
 }
