@@ -7,7 +7,6 @@ import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.cookie.StandardCookieSpec;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.client5.http.protocol.HttpClientContext;
 import org.apache.hc.core5.http.ClassicHttpResponse;
@@ -15,11 +14,11 @@ import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.io.HttpClientResponseHandler;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.net.URIBuilder;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import twitter4j.HttpResponse;
-import twitter4j.JSONObject;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 import twitter4j.TwitterObjectFactory;
@@ -28,8 +27,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 @Component
@@ -69,7 +72,7 @@ public class TwitterV2StreamHelper {
 
                     while (nextLine != null) {
                         nextLine = reader.readLine();
-                        if(!nextLine.isEmpty()) {
+                        if (!nextLine.isEmpty()) {
                             String tweet = getFormattedTweet(nextLine);
 
                             Status status = null;
@@ -121,10 +124,19 @@ public class TwitterV2StreamHelper {
                 final HttpEntity entity = response.getEntity();
                 if (entity != null) {
                     JSONObject json = new JSONObject(EntityUtils.toString(entity, "UTF-8"));
+                    if (json.length() > 1) {
+                        JSONArray jsonArray = (JSONArray) json.get("data");
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+                            rules.add(jsonObject.getString("id"));
+                        }
+                    }
                 }
+                return null;
             };
-
         }
+
+        return rules;
     }
 
     private void createRules(String bearerToken, Map<String, String> rules) throws IOException {
@@ -136,7 +148,14 @@ public class TwitterV2StreamHelper {
         }
     }
 
-    private String getFormattedTweet(String nextLine) {
+    private String getFormattedTweet(String data) {
+        JSONObject jsonData = (JSONObject) new JSONObject(data).get("data");
+
+        String[] params = new String[]{
+                ZonedDateTime.parse(jsonData.get("created_at").toString()).withZoneSameInstant(ZoneId.of("UTC"))
+                        .format(DateTimeFormatter.ofPattern(TWITTER_STATUS_DATE_FORMAT, Locale.ENGLISH)),
+        };
+
         return null;
     }
 }
