@@ -57,6 +57,6 @@ public class TwitterKafkaConsumer implements KafkaConsumer<Long, TwitterAvroMode
         List<TwitterIndexModel> twitterIndexModels = transformer.getElasticModels(messages);
         List<String> documentIds = indexClient.save(twitterIndexModels);
 
-        LOGGER.info("Documents saved to elasticsearch with ids: {}", documentIds.toArray());
+        LOGGER.info("Documents saved to elasticsearch with ids: {}", documentIds);
     }
 }

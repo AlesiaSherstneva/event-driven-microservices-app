@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-@Document(indexName = "#{elasticConfigData.indexName}")
+@Document(indexName = "#{@elasticConfigData.indexName}")
 public class TwitterIndexModel implements IndexModel {
     @JsonProperty
     private String id;
@@ -24,8 +24,8 @@ public class TwitterIndexModel implements IndexModel {
     @JsonProperty
     private String text;
 
-    @Field(type = FieldType.Date, format = {}, pattern = "uuuu-MM-dd'T'HH:mm:ssZZ")
+    @Field(type = FieldType.Date, format = {}, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     @JsonProperty
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "uuuu-MM-dd'T'HH:mm:ssZZ")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt;
 }

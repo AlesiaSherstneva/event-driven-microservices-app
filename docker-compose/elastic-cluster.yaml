@@ -2,62 +2,22 @@ name: elasticsearch-cluster
 services:
   elastic-1:
     image: elasticsearch:9.0.2
+    container_name: elastic-1
     environment:
       - node.name=elastic-1
       - cluster.name=es-twitter-cluster
-      - discovery.seed_hosts=elastic-2,elastic-3
-      - cluster.initial_master_nodes=elastic-1,elastic-2,elastic-3
+      - discovery.type=single-node
       - bootstrap.memory_lock=true
       - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
     ulimits:
       memlock:
         soft: -1
         hard: -1
     ports:
-      - 9200:9200
+      - "9200:9200"
     volumes:
       - .\volumes\elastic\data-1:/usr/share/elasticsearch/data
 
-  elastic-2:
-    image: elasticsearch:9.0.2
-    environment:
-      - node.name=elastic-2
-      - cluster.name=es-twitter-cluster
-      - discovery.seed_hosts=elastic-1,elastic-3
-      - cluster.initial_master_nodes=elastic-1,elastic-2,elastic-3
-      - bootstrap.memory_lock=true
-      - xpack.security.enabled=false
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    ports:
-      - 9201:9200
-    volumes:
-      - .\volumes\elastic\data-2:/usr/share/elasticsearch/data
-
-  elastic-3:
-    image: elasticsearch:9.0.2
-    environment:
-      - node.name=elastic-3
-      - cluster.name=es-twitter-cluster
-      - discovery.seed_hosts=elastic-1,elastic-2
-      - cluster.initial_master_nodes=elastic-1,elastic-2,elastic-3
-      - bootstrap.memory_lock=true
-      - xpack.security.enabled=false
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    ports:
-      - 9202:9200
-    volumes:
-      - .\volumes\elastic\data-3:/usr/share/elasticsearch/data
-
 volumes:
   data-1:
-    driver: local
-  data-2:
-    driver: local
-  data-3:
-    driver: local
