@@ -66,7 +66,7 @@ public class TwitterElasticQueryClient implements ElasticQueryClient<TwitterInde
         SearchHits<TwitterIndexModel> searchResult =
                 operations.search(query, TwitterIndexModel.class, IndexCoordinates.of(configData.getIndexName()));
 
-        LOGGER.info("{} of documents retrieved successfully", searchResult.getTotalHits());
+        LOGGER.info("{} number of documents retrieved successfully", searchResult.getTotalHits());
 
         return searchResult.get()
                 .map(SearchHit::getContent)

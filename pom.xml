@@ -24,6 +24,7 @@
         <module>config-server</module>
         <module>kafka-to-elastic-service</module>
         <module>elastic</module>
+        <module>common-util</module>
     </modules>
 
     <properties>
@@ -124,6 +125,11 @@
             <dependency>
                 <groupId>com.microservices</groupId>
                 <artifactId>common-config</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.microservices</groupId>
+                <artifactId>common-util</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

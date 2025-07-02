@@ -16,6 +16,10 @@
             <groupId>com.microservices</groupId>
             <artifactId>app-config-data</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.microservices</groupId>
+            <artifactId>common-util</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.microservices</groupId>
