@@ -3,6 +3,8 @@ package com.microservices.api;
 import com.microservices.model.ElasticQueryServiceRequestModel;
 import com.microservices.model.ElasticQueryServiceResponseModel;
 import com.microservices.service.ElasticQueryService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +36,7 @@ public class ElasticDocumentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ElasticQueryServiceResponseModel> getDocumentById(@PathVariable String id) {
+    public ResponseEntity<ElasticQueryServiceResponseModel> getDocumentById(@PathVariable @NotEmpty String id) {
         ElasticQueryServiceResponseModel response = queryService.getDocumentById(id);
 
         LOGGER.info("Elasticsearch returned document with id {}", id);
@@ -44,7 +46,7 @@ public class ElasticDocumentController {
 
     @PostMapping("/by-text")
     public ResponseEntity<List<ElasticQueryServiceResponseModel>> getDocumentByText(
-            @RequestBody ElasticQueryServiceRequestModel requestModel) {
+            @RequestBody @Valid ElasticQueryServiceRequestModel requestModel) {
         List<ElasticQueryServiceResponseModel> response = queryService.getDocumentByText(requestModel.getText());
 
         LOGGER.info("Elasticsearch returned {} of documents", response.size());
