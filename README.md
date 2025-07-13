@@ -28,6 +28,7 @@ Keycloak, Kafka Streams, ELK-stack.
 | Logback | Log4j2 |
 | Apache Httpclient | Apache Httpclient5 |
 | Apache Kafka + Zookeeper | Apache Kafka KRaft mode |
+| springdoc-openapi-ui | springdoc-openapi-starter-webmvc-ui |
 
 ## twitter-to-kafka-service
 
@@ -64,8 +65,25 @@ oauth.accessTokenSecret=******************************************
 
 ## kafka-to-elastic-service
 
-Микросервис получает потоки твитов, преобразует их в индексированные записи, и сохраняет в базу данных
-`Elasticsearch`. Работает как kafka-consumer, принимает твиты из топика `twitter-topic`.
+Микросервис получает потоки твитов, индексирует их и сохраняет в Elasticsearch (индекс `twitter-index`).
+Работает как kafka-consumer, принимает твиты из топика `twitter-topic`.
+
+## elastic-query-service
+
+Микросервис предоставляет доступ к содержимому индекса `twitter-index` через три эндпоинта.  
+Базовый URL `http://localhost:8183/elastic-query-service`.  
+
+| Метод | Эндпоинт            | Описание                                                                                             |
+|-------|---------------------|------------------------------------------------------------------------------------------------------|
+| GET   | `/documents`        | Получение всех твитов                                                                                |
+| GET   | `/documents/{id}`   | Получение одного твита по его id                                                                     |
+| POST  | `documents/by-text` | Получение твитов, содержащих переданный текст <br/>Пример текста в формате JSON: `{ "text": "java" }` |
+
+Для авторизации используются следующие данные:  
+:key: **login:** `test`  
+:lock: **password:** `test1234`
+
+Документация в Swagger UI доступна по эндпоинту `/swagger-ui.html` после запуска приложения.
 
 ## config-server
 
