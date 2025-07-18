@@ -33,7 +33,7 @@
                     <button id="logout-button" type="submit" class="btn btn-danger float-right">Logout</button>
                 </form>
                 <form class="col-12" method="get" th:action="@{/home}" th:unless="${#authorization.expression('isAuthenticated()')}">
-                    <button id="login-button" class="btn btn-primary float-right" type="submit">Button</button>
+                    <button id="login-button" class="btn btn-primary float-right" type="submit">Login</button>
                 </form>
             </div>
         </div>
