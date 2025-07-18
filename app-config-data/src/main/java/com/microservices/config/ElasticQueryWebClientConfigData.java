@@ -2,6 +2,7 @@ package com.microservices.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Data
@@ -16,8 +17,13 @@ public class ElasticQueryWebClientConfigData {
         private Integer readTimeoutMs;
         private Integer writeTimeoutMs;
         private Integer maxInMemorySize;
-        private Integer contentType;
-        private Integer acceptType;
+        private String contentType;
+        private String acceptType;
         private String baseUrl;
+    }
+
+    @Bean
+    public WebClient webClient() {
+        return webClient;
     }
 }
