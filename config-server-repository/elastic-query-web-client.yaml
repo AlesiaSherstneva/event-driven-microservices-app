@@ -12,6 +12,10 @@ elastic-query-web-client:
     content-type: "application/json"
     accept-type: "application/json"
     base-url: "http://elastic-query-service/elastic-query-service/documents"
+  query-by-text:
+    method: POST
+    uri: "/by-text"
+    accept: ${elastic-query-web-client.webclient.accept-type}
 
 spring:
   thymeleaf:
