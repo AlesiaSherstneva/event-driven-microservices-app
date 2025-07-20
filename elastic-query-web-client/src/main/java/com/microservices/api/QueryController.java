@@ -2,7 +2,9 @@ package com.microservices.api;
 
 import com.microservices.model.ElasticQueryWebClientRequestModel;
 import com.microservices.model.ElasticQueryWebClientResponseModel;
+import com.microservices.service.ElasticQueryWebClient;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -10,11 +12,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 public class QueryController {
+    private final ElasticQueryWebClient queryWebClient;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(QueryController.class);
 
     @GetMapping
@@ -38,11 +42,7 @@ public class QueryController {
     public String queryByText(@Valid ElasticQueryWebClientRequestModel requestModel, Model model) {
         LOGGER.info("Querying with text {}", requestModel.getText());
 
-        List<ElasticQueryWebClientResponseModel> responseModels = new ArrayList<>();
-        responseModels.add(ElasticQueryWebClientResponseModel.builder()
-                .id("1")
-                .text(requestModel.getText())
-                .build());
+        List<ElasticQueryWebClientResponseModel> responseModels = queryWebClient.getDataByText(requestModel);
 
         model.addAttribute("elasticQueryWebClientResponseModels", responseModels);
         model.addAttribute("searchText", requestModel.getText());
