@@ -27,7 +27,7 @@ public class WebClientConfig {
     WebClient.Builder webClientBuilder() {
         return WebClient.builder()
                 .filter(ExchangeFilterFunctions
-                        .basicAuthentication(userConfigData.getUsername(), userConfigData.getPassword()))
+                        .basicAuthentication(userConfigData.getUsername(), "test1234"))
                 .baseUrl(clientConfigData.getBaseUrl())
                 .defaultHeaders(headers -> {
                     headers.setContentType(MediaType.valueOf(clientConfigData.getContentType()));
