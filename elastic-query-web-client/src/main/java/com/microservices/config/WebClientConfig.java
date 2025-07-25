@@ -5,6 +5,7 @@ import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.cloud.loadbalancer.annotation.LoadBalancerClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -18,6 +19,10 @@ import java.util.concurrent.TimeUnit;
 
 @Configuration
 @RequiredArgsConstructor
+@LoadBalancerClient(
+        name = "elastic-query-service",
+        configuration = ElasticQueryServiceInstanceListSupplierConfig.class
+)
 public class WebClientConfig {
     private final ElasticQueryWebClientConfigData.WebClient clientConfigData;
     private final UserConfigData userConfigData;

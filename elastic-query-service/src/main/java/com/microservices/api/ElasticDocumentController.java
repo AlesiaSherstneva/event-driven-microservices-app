@@ -13,6 +13,7 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +29,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ElasticDocumentController {
     private final ElasticQueryService queryService;
+
+    @Value("${server.port}")
+    private String port;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ElasticDocumentController.class);
 
@@ -81,7 +85,7 @@ public class ElasticDocumentController {
             @RequestBody @Valid ElasticQueryServiceRequestModel requestModel) {
         List<ElasticQueryServiceResponseModel> response = queryService.getDocumentByText(requestModel.getText());
 
-        LOGGER.info("Elasticsearch returned {} of documents", response.size());
+        LOGGER.info("Elasticsearch returned {} of documents on port {}", response.size(), port);
 
         return ResponseEntity.ok(response);
     }

@@ -5,6 +5,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
+
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "elastic-query-web-client")
@@ -21,6 +23,8 @@ public class ElasticQueryWebClientConfigData {
         private String contentType;
         private String acceptType;
         private String baseUrl;
+        private String serviceId;
+        private List<Instance> instances;
     }
 
     @Bean
@@ -33,5 +37,12 @@ public class ElasticQueryWebClientConfigData {
         private String method;
         private String uri;
         private String accept;
+    }
+
+    @Data
+    public static class Instance {
+        private String id;
+        private String host;
+        private Integer port;
     }
 }
