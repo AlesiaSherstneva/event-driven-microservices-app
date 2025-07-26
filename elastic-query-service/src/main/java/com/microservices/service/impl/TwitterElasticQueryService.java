@@ -1,7 +1,7 @@
 package com.microservices.service.impl;
 
+import com.microservices.common.model.ElasticQueryServiceResponseModel;
 import com.microservices.elastic.model.impl.TwitterIndexModel;
-import com.microservices.model.ElasticQueryServiceResponseModel;
 import com.microservices.model.assembler.ElasticQueryServiceResponseModelAssembler;
 import com.microservices.service.ElasticQueryClient;
 import com.microservices.service.ElasticQueryService;

@@ -1,4 +1,4 @@
-package com.microservices.api.handler;
+package com.microservices.common.api.handler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

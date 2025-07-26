@@ -27,6 +27,7 @@
         <module>common-util</module>
         <module>elastic-query-service</module>
         <module>elastic-query-web-client</module>
+        <module>elastic-query-service-common</module>
     </modules>
 
     <properties>
@@ -190,6 +191,11 @@
             <dependency>
                 <groupId>com.microservices</groupId>
                 <artifactId>elastic-query-client</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.microservices</groupId>
+                <artifactId>elastic-query-service-common</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

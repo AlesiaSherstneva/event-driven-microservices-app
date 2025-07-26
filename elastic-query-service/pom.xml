@@ -47,7 +47,6 @@
             <groupId>com.microservices</groupId>
             <artifactId>app-config-data</artifactId>
         </dependency>
-
         <dependency>
             <groupId>com.microservices</groupId>
             <artifactId>elastic-config</artifactId>
@@ -55,6 +54,10 @@
         <dependency>
             <groupId>com.microservices</groupId>
             <artifactId>elastic-query-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.microservices</groupId>
+            <artifactId>elastic-query-service-common</artifactId>
         </dependency>
 
         <dependency>

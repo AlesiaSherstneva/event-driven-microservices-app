@@ -1,7 +1,7 @@
 package com.microservices.api;
 
-import com.microservices.model.ElasticQueryServiceRequestModel;
-import com.microservices.model.ElasticQueryServiceResponseModel;
+import com.microservices.common.model.ElasticQueryServiceRequestModel;
+import com.microservices.common.model.ElasticQueryServiceResponseModel;
 import com.microservices.service.ElasticQueryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
