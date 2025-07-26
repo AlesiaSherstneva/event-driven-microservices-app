@@ -1,4 +1,4 @@
-package com.microservices.model;
+package com.microservices.common.model;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;

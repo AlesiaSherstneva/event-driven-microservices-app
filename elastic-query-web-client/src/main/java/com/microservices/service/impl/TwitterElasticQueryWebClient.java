@@ -1,9 +1,9 @@
 package com.microservices.service.impl;
 
+import com.microservices.common.exception.ElasticQueryWebClientException;
+import com.microservices.common.model.ElasticQueryWebClientRequestModel;
+import com.microservices.common.model.ElasticQueryWebClientResponseModel;
 import com.microservices.config.ElasticQueryWebClientConfigData;
-import com.microservices.exception.ElasticQueryWebClientException;
-import com.microservices.model.ElasticQueryWebClientRequestModel;
-import com.microservices.model.ElasticQueryWebClientResponseModel;
 import com.microservices.service.ElasticQueryWebClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

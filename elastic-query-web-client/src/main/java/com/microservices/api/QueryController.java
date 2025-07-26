@@ -1,7 +1,7 @@
 package com.microservices.api;
 
-import com.microservices.model.ElasticQueryWebClientRequestModel;
-import com.microservices.model.ElasticQueryWebClientResponseModel;
+import com.microservices.common.model.ElasticQueryWebClientRequestModel;
+import com.microservices.common.model.ElasticQueryWebClientResponseModel;
 import com.microservices.service.ElasticQueryWebClient;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
