@@ -1,0 +1,25 @@
+elastic-query-service:
+  backPressure-delay-ms: 500
+
+elastic-config:
+  index-name: twitter-index
+  connection-url: http://localhost:9200
+  connect-timeout-ms: 5000
+  socket-timeout-ms: 30000
+
+elastic-query-config:
+  text-field: text
+
+server:
+  port: 8183
+
+spring:
+  webflux:
+    base-path: /elastic-query-service-reactive
+  codec:
+    max-in-memory-size: 25MB
+  data:
+    elastic:
+      client:
+        reactive:
+          max-in-memory-size: 25MB
