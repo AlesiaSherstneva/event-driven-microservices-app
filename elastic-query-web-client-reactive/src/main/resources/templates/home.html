@@ -12,7 +12,7 @@
                     <input class="btn btn-dark" type="submit" value="Search">
                 </div>
             </div>
-            <div class="col-12" th:switch="${elasticQueryWebClientResponseModels}">
+            <div class="col-12" th:switch="${elasticQueryClientResponseModels}">
                 <h4 th:case="null">
                     <span th:text="${error != null} ? ${error} : 'No results yet!'"/>
                 </h4>
@@ -28,7 +28,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="elasticQueryWebClientResponseModel : ${elasticQueryWebClientResponseModels}">
+                        <tr th:each="elasticQueryWebClientResponseModel : ${elasticQueryClientResponseModels}">
                             <th scope="row" th:text="${elasticQueryWebClientResponseModel.id}"></th>
                             <th scope="row" th:text="${elasticQueryWebClientResponseModel.userId}"></th>
                             <th scope="row" th:text="${elasticQueryWebClientResponseModel.text}"></th>

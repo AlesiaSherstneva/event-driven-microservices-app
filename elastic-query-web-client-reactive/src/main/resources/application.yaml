@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: elastic-query-web-client-reactive
+  profiles:
+    active: elastic_query_web_reactive
+  config:
+    import: "optional:configserver:http://localhost:8888"
+
+logging:
+  config: "classpath:log4j2-common.xml"
