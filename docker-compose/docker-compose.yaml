@@ -1,14 +1,14 @@
-name: twitter-kafka-cluster
+name: twitter-kafka-elastic-service
+
 services:
+  # Kafka cluster
   kafka-1:
     image: 'bitnami/kafka:latest'
     container_name: kafka-broker-1
     environment:
-      # KRaft settings
       - KAFKA_CFG_NODE_ID=1
       - KAFKA_CFG_PROCESS_ROLES=broker,controller
       - KAFKA_KRAFT_CLUSTER_ID=r4zt_wrqTRuT7W2NJsB_GA
-      # Listeners
       - KAFKA_CFG_LISTENERS=PLAINTEXT://:9192,CONTROLLER://:9094,EXTERNAL://:9091
       - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka-1:9192,EXTERNAL://localhost:9091
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
@@ -24,11 +24,9 @@ services:
     image: 'bitnami/kafka:latest'
     container_name: kafka-broker-2
     environment:
-      # KRaft settings
       - KAFKA_CFG_NODE_ID=2
       - KAFKA_CFG_PROCESS_ROLES=broker,controller
       - KAFKA_KRAFT_CLUSTER_ID=r4zt_wrqTRuT7W2NJsB_GA
-      # Listeners
       - KAFKA_CFG_LISTENERS=PLAINTEXT://:9192,CONTROLLER://:9094,EXTERNAL://:9092
       - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka-2:9192,EXTERNAL://localhost:9092
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
@@ -41,14 +39,12 @@ services:
       - .\volumes\kafka\server-2:/bitnami/kafka
 
   kafka-3:
-    image: 'bitnami/kafka:3.3.2'
+    image: 'bitnami/kafka:latest'
     container_name: kafka-broker-3
     environment:
-      # KRaft settings
       - KAFKA_CFG_NODE_ID=3
       - KAFKA_CFG_PROCESS_ROLES=broker,controller
       - KAFKA_KRAFT_CLUSTER_ID=r4zt_wrqTRuT7W2NJsB_GA
-      # Listeners
       - KAFKA_CFG_LISTENERS=PLAINTEXT://:9192,CONTROLLER://:9094,EXTERNAL://:9093
       - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka-3:9192,EXTERNAL://localhost:9093
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
@@ -60,14 +56,16 @@ services:
     volumes:
       - .\volumes\kafka\server-3:/bitnami/kafka
 
+  # Schema registry
   schema-registry:
     image: confluentinc/cp-schema-registry:latest
+    container_name: schema-registry
     depends_on:
       - kafka-1
       - kafka-2
       - kafka-3
     ports:
-      - "8081:8081"
+      - 8081:8081
     environment:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_LISTENERS: "http://0.0.0.0:8081"
@@ -79,3 +77,57 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+
+  # Elasticsearch cluster
+  elastic:
+    image: elasticsearch:9.0.2
+    container_name: elastic
+    environment:
+      - node.name=elastic-1
+      - cluster.name=es-twitter-cluster
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - 9200:9200
+    volumes:
+      - .\volumes\elastic\data:/usr/share/elasticsearch/data
+
+  # Postgres DB for Keycloak
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak
+    ports:
+      - 5433:5432
+    volumes:
+      - .\volumes\postgres\data:/var/lib/postgresql/data
+
+  # Keycloak authorization server
+  keycloak-authorization-server:
+    image: quay.io/keycloak/keycloak:${KEYCLOAK_VERSION:-latest}
+    container_name: keycloak-authorization-server
+    hostname: keycloak-server
+    depends_on:
+      - postgres
+    ports:
+      - 8080:8080
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_DB=postgres
+      - KC_DB_URL_HOST=postgres
+      - KC_DB_URL_PORT=5432
+      - KC_DB_URL_DATABASE=keycloak
+      - KC_DB_USERNAME=keycloak
+      - KC_DB_PASSWORD=keycloak
+      - KC_HOSTNAME_STRICT=false
+    command: ["start-dev"]
