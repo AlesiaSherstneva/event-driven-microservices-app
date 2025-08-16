@@ -103,21 +103,7 @@ docker-compose up -d
     - "Web origins" - `http://localhost:8184`
 - сохранить клиента кнопкой "Save"
 
-7. Настроить Mappers (мапперы):
-- левое меню: "Clients"
-- кликнуть на имя клиента → "Client scopes" → `elastic-query-web-client-dedicated` → "Add predefined mappers"
-- найти маппер под названием "groups" → "Add"
-- "Add mapper" → "By configuration" → выбрать "Audience" → в поле "Name" ввести  
-`elastic-query-service` → "Save"
-- "Add mapper" → "By configuration" → выбрать "User Session Note", заполнить настройки:
-    - "Name" - client-id
-    - "User Session Note" - clientID
-    - "Token Claim Name" - clientID
-- аналогично создать ещё два маппера "User Session Note" со следующими настройками:
-    - "Name" - client-host, "User Session Note" - clientHost, "Token Claim Name" - clientHost
-    - "Name" - client-ip, "User Session Note" - clientIPAddress, "Token Claim Name" - clientIPAddress
-
-8. Настроить Client Scopes (области доступов клиентов):
+7. Настроить Client Scopes (области доступов клиентов):
 - левое меню: "Client scopes"
 - выбрать "Create client scope", заполнить настройки:
   - "Name" - ввести название роли для пользователя (например, `app_user_role`)
@@ -128,19 +114,38 @@ docker-compose up -d
 - аналогично создать области доступов для администратора и привилегированного пользователя (например,
 `app_admin_role` и `app_super_user_role`), назначить им соответствующие роли
 
-9. Создать ещё одного Client (клиента):
+8. Создать ещё одного Client (клиента):
 - левое меню: "Clients"
 - выбрать "Create client", заполнить настройки:
   - "Client ID" - `elastic-query-service`
   - "Client authentication" - перевести в положение "On"
   - "Valid Redirect URIs" - `http://localhost:8184/elastic-query-service/login/oauth2/code/keycloak`
 - сохранить клиента кнопкой "Save"
-- добавить мапперы, аналогичные описанным в пункте 7:
-  - маппер "groups"
-  - три маппера "User Session Note"
-  - два маппера "Audience" с полями "Name":
-    - `kafka-streams-service`
-    - `analytics-service`
+
+9. Настроить Mappers (мапперы) для `elastic-query-web-client`:
+- левое меню: "Clients"
+- кликнуть на имя клиента → "Client scopes" → `elastic-query-web-client-dedicated` → "Add predefined mappers"
+- найти маппер под названием "groups" → "Add"
+- "Add mapper" → "By configuration" → выбрать "Audience", заполнить настройки:
+  - "Name" - `elastic-query-service`
+  - "Include Client Audience" - выбрать "elastic-query-service" из выпадающего меню
+  - "Add to ID token" - перевести в положение "On"
+  - "Add to access token" - перевести в положение "On"
+- сохранить маппер кнопкой "Save"
+- "Add mapper" → "By configuration" → выбрать "User Session Note", заполнить настройки:
+  - "Name" - client-id
+  - "User Session Note" - clientID
+  - "Token Claim Name" - clientID
+- аналогично создать ещё два маппера "User Session Note" со следующими настройками:
+  - "Name" - client-host, "User Session Note" - clientHost, "Token Claim Name" - clientHost
+  - "Name" - client-ip, "User Session Note" - clientIPAddress, "Token Claim Name" - clientIPAddress
+
+10. Настроить мапперы для `elastic-query-service` (аналогично описанным в пункте 9):
+- маппер "groups"
+- три маппера "User Session Note"
+- два маппера "Audience" с полями "Name":
+  - `kafka-streams-service`
+  - `analytics-service`
 </details>
 
 ## twitter-to-kafka-service

@@ -44,6 +44,7 @@
         <avro.version>1.12.0</avro.version>
         <spring-kafka.version>4.0.0-M2</spring-kafka.version>
         <spring-retry.version>2.0.12</spring-retry.version>
+        <spring-oauth.version>3.5.5</spring-oauth.version>
         <kafka-avro-serializer.version>7.9.1</kafka-avro-serializer.version>
         <spring-cloud.version>4.3.0</spring-cloud.version>
         <spring-cloud-dependencies.version>2025.0.0</spring-cloud-dependencies.version>
@@ -99,6 +100,11 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-security</artifactId>
                 <version>${spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+                <version>${spring-oauth.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
