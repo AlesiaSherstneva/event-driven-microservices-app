@@ -1,0 +1,5 @@
+name: twitter-kafka-elastic-service
+
+include:
+  - ./infrastructure.yaml
+  - ./services.yaml
