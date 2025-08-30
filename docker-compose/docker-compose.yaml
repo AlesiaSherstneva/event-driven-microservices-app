@@ -3,3 +3,7 @@ name: twitter-kafka-elastic-service
 include:
   - ./infrastructure.yaml
   - ./services.yaml
+
+networks:
+  application:
+    driver: bridge
