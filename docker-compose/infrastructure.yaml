@@ -110,7 +110,7 @@ services:
     ports:
       - 5433:5432
     volumes:
-      - .\volumes\postgres\data:/var/lib/postgresql/data
+      - .\volumes\postgres\data:/var/lib/postgresql
 
   # Keycloak authorization server
   keycloak-authorization-server:
