@@ -4,6 +4,9 @@
 /target
 /**/target
 
+# Maven wrapper
+.mvn
+
 # secret credentials files
 /twitter-to-kafka-service/src/main/resources/twitter4j.properties
 
@@ -11,5 +14,6 @@
 /logs/
 /**/logs
 
-# docker volumes
+# Docker volumes
 /docker-compose/volumes/
+/docker-compose/docker-logs/
