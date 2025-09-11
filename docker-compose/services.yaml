@@ -5,6 +5,9 @@ services:
       - "5005:5005"
     volumes:
       - "./docker-logs:/workspace/twitter-to-kafka-service/logs"
+      - "./check-config-server-started.sh:/check-config-server-started.sh"
+    user: root
+    entrypoint: [ "sh", "/check-config-server-started.sh" ]
     environment:
       - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Xms128m -Xmx256m"
       - "LOGGING_LEVEL_COM_MICROSERVICES=info"
@@ -24,10 +27,10 @@ services:
       - "5006:5006"
     volumes:
       - "./docker-logs:/workspace/config-server/logs"
-    user: root
-    entrypoint: ["check-config-server-started.sh"]
     environment:
       - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006 -Xms128m -Xmx256m"
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
+      - "SPRING_PROFILES_ACTIVE=native"
+      - "SPRING_CLOUD_CONFIG_SERVER_NATIVE_SEARCH_LOCATIONS=file:///config-server-repository"
     networks:
       - ${GLOBAL_NETWORK:-services}
