@@ -5,9 +5,6 @@ services:
       - "5005:5005"
     volumes:
       - "./docker-logs:/workspace/twitter-to-kafka-service/logs"
-      - "./check-config-server-started.sh:/check-config-server-started.sh"
-    user: root
-    entrypoint: [ "sh", "/check-config-server-started.sh" ]
     environment:
       - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Xms128m -Xmx256m"
       - "LOGGING_LEVEL_COM_MICROSERVICES=info"
@@ -20,6 +17,9 @@ services:
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
     networks:
       - ${GLOBAL_NETWORK:-services}
+    depends_on:
+      config-server:
+        condition: service_healthy
 
   config-server:
     image: ${GROUP_ID}/config.server:${SERVICE_VERSION:-latest}
@@ -34,3 +34,8 @@ services:
       - "SPRING_CLOUD_CONFIG_SERVER_NATIVE_SEARCH_LOCATIONS=file:///config-server-repository"
     networks:
       - ${GLOBAL_NETWORK:-services}
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8888/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
