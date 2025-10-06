@@ -12,6 +12,9 @@ spring:
           clone-on-start: true
           default-label: main
       fail-fast: true
+      allowOverride: true
+      overrideNone: true
+      overrideSystemProperties: true
 
 logging:
   config: "classpath:log4j2-common.xml"
