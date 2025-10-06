@@ -129,6 +129,10 @@ services:
       - "SERVER_SERVLET_CONTEXT-PATH=/elastic-query-service"
       - "SPRING_CONFIG_IMPORT=configserver:http://config-server:8888"
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
+
+      # temporary KEYCLOAK configs
+      - "SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=http://keycloak-authorization-server:8080/realms/twitter-service-realm"
+      - "SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI=http://keycloak-authorization-server:8080/realms/twitter-service-realm/protocol/openid-connect/certs"
     networks:
       - ${GLOBAL_NETWORK:-services}
     depends_on:
