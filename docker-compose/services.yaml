@@ -67,6 +67,7 @@ services:
       - "8888:8888"
     volumes:
       - "./docker-logs:/workspace/config-server/logs"
+      - "../config-server-repository:/config-server-repository"
     environment:
       - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5007 -Xms128m -Xmx256m"
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
@@ -92,11 +93,15 @@ services:
       - "LOGGING_LEVEL_COM_MICROSERVICES=info"
       - "LOGGING_LEVEL_ROOT=info"
       - "ELASTIC-CONFIG_INDEX-NAME=twitter-index"
-      - "ELASTIC-CONFIG_CONNECTION-URL=http://elastic-1:9200"
+      - "ELASTIC-CONFIG_CONNECTION-URL=http://elastic:9200"
       - "SERVER_PORT=8183"
       - "SERVER_SERVLET_CONTEXT-PATH=/elastic-query-service"
-      - "SPRING_CLOUD_CONFIG_URI=http://config-server:8888"
+      - "SPRING_CONFIG_IMPORT=configserver:http://config-server:8888"
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
+
+      # temporary KEYCLOAK configs
+      - "SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=http://keycloak-authorization-server:8080/realms/twitter-service-realm"
+      - "SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI=http://keycloak-authorization-server:8080/realms/twitter-service-realm/protocol/openid-connect/certs"
     networks:
       - ${GLOBAL_NETWORK:-services}
     depends_on:
@@ -119,10 +124,10 @@ services:
       - "LOGGING_LEVEL_COM_MICROSERVICES=info"
       - "LOGGING_LEVEL_ROOT=info"
       - "ELASTIC-CONFIG_INDEX-NAME=twitter-index"
-      - "ELASTIC-CONFIG_CONNECTION-URL=http://elastic-1:9200"
+      - "ELASTIC-CONFIG_CONNECTION-URL=http://elastic:9200"
       - "SERVER_PORT=8185"
       - "SERVER_SERVLET_CONTEXT-PATH=/elastic-query-service"
-      - "SPRING_CLOUD_CONFIG_URI=http://config-server:8888"
+      - "SPRING_CONFIG_IMPORT=configserver:http://config-server:8888"
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
     networks:
       - ${GLOBAL_NETWORK:-services}
