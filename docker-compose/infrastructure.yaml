@@ -18,6 +18,8 @@ services:
       - 9091:9091
     volumes:
       - .\volumes\kafka\server-1:/var/lib/kafka/data
+    networks:
+      - ${GLOBAL_NETWORK:-services}
 
   kafka-2:
     image: apache/kafka:latest
@@ -37,6 +39,8 @@ services:
       - 9092:9092
     volumes:
       - .\volumes\kafka\server-2:/var/lib/kafka/data
+    networks:
+      - ${GLOBAL_NETWORK:-services}
 
   kafka-3:
     image: apache/kafka:latest
@@ -56,6 +60,8 @@ services:
       - 9093:9093
     volumes:
       - .\volumes\kafka\server-3:/var/lib/kafka/data
+    networks:
+      - ${GLOBAL_NETWORK:-services}
 
   # Schema registry
   schema-registry:
@@ -73,6 +79,8 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "kafka-1:9192,kafka-2:9192,kafka-3:9192"
       SCHEMA_REGISTRY_KAFKASTORE_SECURITY_PROTOCOL: "PLAINTEXT"
     restart: unless-stopped
+    networks:
+      - ${GLOBAL_NETWORK:-services}
     healthcheck:
       test: [ "CMD", "kafka-topics.sh", "--bootstrap-server", "localhost:9192", "--list" ]
       interval: 10s
@@ -98,6 +106,8 @@ services:
       - 9200:9200
     volumes:
       - .\volumes\elastic\data:/usr/share/elasticsearch/data
+    networks:
+      - ${GLOBAL_NETWORK:-services}
 
   # Postgres DB for Keycloak
   postgres:
@@ -111,6 +121,8 @@ services:
       - 5433:5432
     volumes:
       - .\volumes\postgres\data:/var/lib/postgresql
+    networks:
+      - ${GLOBAL_NETWORK:-services}
 
   # Keycloak authorization server
   keycloak-authorization-server:
@@ -132,3 +144,9 @@ services:
       KC_DB_PASSWORD: keycloak
       KC_HOSTNAME_STRICT: false
     command: ["start-dev"]
+    networks:
+      - ${GLOBAL_NETWORK:-services}
+
+networks:
+  application:
+    driver: bridge
