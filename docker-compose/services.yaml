@@ -40,9 +40,9 @@ services:
       - "KAFKA-CONFIG_TOPIC-NAME=twitter-topic"
       - "KAFKA-CONFIG_BOOTSTRAP-SERVERS=kafka-broker-1:9092, kafka-broker-2:9092, kafka-broker-3:9092"
       - "KAFKA-CONFIG_SCHEMA-REGISTRY-URL=http://schema-registry:8081"
-      - "SPRING_CLOUD_CONFIG_URI=http://config-server:8888"
+      - "SPRING_CONFIG_IMPORT=configserver:http://config-server:8888"
       - "ELASTIC-CONFIG_INDEX-NAME=twitter-index"
-      - "ELASTIC-CONFIG_CONNECTION-URL=http://elastic-1:9200"
+      - "ELASTIC-CONFIG_CONNECTION-URL=http://elastic:9200"
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
     networks:
       - ${GLOBAL_NETWORK:-services}
@@ -154,7 +154,7 @@ services:
       - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5010 -Xms128m -Xmx256m"
       - "LOGGING_LEVEL_COM_MICROSERVICES=info"
       - "LOGGING_LEVEL_ROOT=info"
-      - "SERVER_PORT=8183"
+      - "SERVER_PORT=8184"
       - "SERVER_SERVLET_CONTEXT-PATH=/elastic-query-web-client"
       - "SPRING_CONFIG_IMPORT=configserver:http://config-server:8888"
       - "ELASTIC-QUERY-WEB-CLIENT_WEB-CLIENT_BASE=http://elastic-query-service/elastic-query-service/documents"
