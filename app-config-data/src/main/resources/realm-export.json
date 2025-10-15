@@ -1,0 +1,280 @@
+{
+  "id": "twitter-service-realm",
+  "realm": "twitter-service-realm",
+  "enabled": true,
+  "roles": {
+    "realm": [
+      {
+        "name": "app_user_role",
+        "description": "Base user role"
+      },
+      {
+        "name": "app_super_user_role",
+        "description": "Super user role with elevated privileges"
+      },
+      {
+        "name": "app_admin_role",
+        "description": "Administrative role"
+      }
+    ]
+  },
+  "groups": [
+    {
+      "name": "app_user_group",
+      "path": "/app_user_group",
+      "realmRoles": [
+        "app_user_role"
+      ]
+    },
+    {
+      "name": "app_super_user_group",
+      "path": "/app_super_user_group",
+      "realmRoles": [
+        "app_super_user_role"
+      ]
+    },
+    {
+      "name": "app_admin_group",
+      "path": "/app_admin_group",
+      "realmRoles": [
+        "app_admin_role"
+      ]
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "elastic-query-web-client",
+      "protocol": "openid-connect",
+      "enabled": true,
+      "bearerOnly": false,
+      "publicClient": false,
+      "serviceAccountsEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "rootUrl": "http://localhost:8184/elastic-query-web-client",
+      "baseUrl": "http://localhost:8184/elastic-query-web-client",
+      "redirectUris": [
+        "http://localhost:8184/elastic-query-web-client/login/oauth2/code/keycloak",
+        "http://localhost:8184/elastic-query-web-client"
+      ],
+      "webOrigins": [
+        "http://localhost:8184"
+      ],
+      "secret": "8y1aBQJO8/6Z7o9/uo937FHs2Y3CfrDf5Gl88xKSdUY=",
+      "defaultClientScopes": [
+        "web-origins",
+        "acr",
+        "roles",
+        "profile",
+        "email",
+        "app_user_role",
+        "app_super_user_role",
+        "app_admin_role"
+      ],
+      "protocolMappers": [
+        {
+          "name": "groups",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-group-membership-mapper",
+          "config": {
+            "full.path": "false",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "groups",
+            "userinfo.token.claim": "true"
+          }
+        },
+        {
+          "name": "elastic-query-service",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "config": {
+            "included.client.audience": "elastic-query-service",
+            "id.token.claim": "true",
+            "access.token.claim": "true"
+          }
+        },
+        {
+          "name": "client-id",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usersessionnote-mapper",
+          "config": {
+            "user.session.note": "clientID",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "clientID"
+          }
+        },
+        {
+          "name": "client-host",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usersessionnote-mapper",
+          "config": {
+            "user.session.note": "clientHost",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "clientHost"
+          }
+        },
+        {
+          "name": "client-ip",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usersessionnote-mapper",
+          "config": {
+            "user.session.note": "clientIPAddress",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "clientIPAddress"
+          }
+        }
+      ]
+    },
+    {
+      "clientId": "elastic-query-service",
+      "protocol": "openid-connect",
+      "enabled": true,
+      "bearerOnly": false,
+      "publicClient": false,
+      "serviceAccountsEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "redirectUris": [
+        "http://localhost:8184/elastic-query-service/login/oauth2/code/keycloak"
+      ],
+      "secret": "0KvJQVvwKidvs6f5jFGSGkRmz7/QpLnRx2t1wzX5ubg=",
+      "defaultClientScopes": [
+        "web-origins",
+        "acr",
+        "roles",
+        "profile",
+        "email",
+        "app_user_role",
+        "app_super_user_role",
+        "app_admin_role"
+      ],
+      "protocolMappers": [
+        {
+          "name": "groups",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-group-membership-mapper",
+          "config": {
+            "full.path": "false",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "groups",
+            "userinfo.token.claim": "true"
+          }
+        },
+        {
+          "name": "kafka-streams-service",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "config": {
+            "included.client.audience": "kafka-streams-service",
+            "id.token.claim": "true",
+            "access.token.claim": "true"
+          }
+        },
+        {
+          "name": "analytics-service",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "config": {
+            "included.client.audience": "analytics-service",
+            "id.token.claim": "true",
+            "access.token.claim": "true"
+          }
+        },
+        {
+          "name": "client-id",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usersessionnote-mapper",
+          "config": {
+            "user.session.note": "clientID",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "clientID"
+          }
+        },
+        {
+          "name": "client-host",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usersessionnote-mapper",
+          "config": {
+            "user.session.note": "clientHost",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "clientHost"
+          }
+        },
+        {
+          "name": "client-ip",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usersessionnote-mapper",
+          "config": {
+            "user.session.note": "clientIPAddress",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "clientIPAddress"
+          }
+        }
+      ]
+    }
+  ],
+  "clientScopes": [
+    {
+      "name": "app_user_role",
+      "protocol": "openid-connect"
+    },
+    {
+      "name": "app_super_user_role",
+      "protocol": "openid-connect"
+    },
+    {
+      "name": "app_admin_role",
+      "protocol": "openid-connect"
+    }
+  ],
+  "users": [
+    {
+      "username": "app_user",
+      "enabled": true,
+      "groups": [
+        "app_user_group"
+      ],
+      "credentials": [
+        {
+          "type": "password",
+          "value": "user-pass123",
+          "temporary": false
+        }
+      ]
+    },
+    {
+      "username": "app_super_user",
+      "enabled": true,
+      "groups": [
+        "app_super_user_group"
+      ],
+      "credentials": [
+        {
+          "type": "password",
+          "value": "super-secure456",
+          "temporary": false
+        }
+      ]
+    },
+    {
+      "username": "app_admin_role",
+      "enabled": true,
+      "groups": [
+        "app_admin_group"
+      ],
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin-master789",
+          "temporary": false
+        }
+      ]
+    }
+  ]
+}
