@@ -133,6 +133,8 @@ services:
       - postgres
     ports:
       - 8080:8080
+    volumes:
+      - ../app-config-data/src/main/resources/realm-export.json:/opt/keycloak/data/import/realm-export.json
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
@@ -143,7 +145,10 @@ services:
       KC_DB_USERNAME: keycloak
       KC_DB_PASSWORD: keycloak
       KC_HOSTNAME_STRICT: false
-    command: ["start-dev"]
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_OVERRIDE: true
+    command: ["start-dev", "--import-realm"]
     networks:
       - ${GLOBAL_NETWORK:-services}
 
