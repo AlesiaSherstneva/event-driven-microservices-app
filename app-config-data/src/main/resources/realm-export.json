@@ -60,16 +60,6 @@
         "http://localhost:8184"
       ],
       "secret": "8y1aBQJO8/6Z7o9/uo937FHs2Y3CfrDf5Gl88xKSdUY=",
-      "defaultClientScopes": [
-        "web-origins",
-        "acr",
-        "roles",
-        "profile",
-        "email",
-        "app_user_role",
-        "app_super_user_role",
-        "app_admin_role"
-      ],
       "protocolMappers": [
         {
           "name": "groups",
@@ -140,16 +130,6 @@
         "http://localhost:8184/elastic-query-service/login/oauth2/code/keycloak"
       ],
       "secret": "0KvJQVvwKidvs6f5jFGSGkRmz7/QpLnRx2t1wzX5ubg=",
-      "defaultClientScopes": [
-        "web-origins",
-        "acr",
-        "roles",
-        "profile",
-        "email",
-        "app_user_role",
-        "app_super_user_role",
-        "app_admin_role"
-      ],
       "protocolMappers": [
         {
           "name": "groups",
@@ -219,24 +199,15 @@
       ]
     }
   ],
-  "clientScopes": [
-    {
-      "name": "app_user_role",
-      "protocol": "openid-connect"
-    },
-    {
-      "name": "app_super_user_role",
-      "protocol": "openid-connect"
-    },
-    {
-      "name": "app_admin_role",
-      "protocol": "openid-connect"
-    }
-  ],
   "users": [
     {
       "username": "app_user",
       "enabled": true,
+      "firstName": "App",
+      "lastName": "User",
+      "email": "user@microservices.com",
+      "emailVerified": true,
+      "requiredActions": [],
       "groups": [
         "app_user_group"
       ],
@@ -251,6 +222,11 @@
     {
       "username": "app_super_user",
       "enabled": true,
+      "firstName": "Super",
+      "lastName": "User",
+      "email": "superuser@microservices.com",
+      "emailVerified": true,
+      "requiredActions": [],
       "groups": [
         "app_super_user_group"
       ],
@@ -263,8 +239,13 @@
       ]
     },
     {
-      "username": "app_admin_role",
+      "username": "app_admin",
       "enabled": true,
+      "firstName": "App",
+      "lastName": "Admin",
+      "email": "admin@microservices.com",
+      "emailVerified": true,
+      "requiredActions": [],
       "groups": [
         "app_admin_group"
       ],
