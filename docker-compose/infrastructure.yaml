@@ -134,7 +134,7 @@ services:
     ports:
       - 8080:8080
     volumes:
-      - ../app-config-data/src/main/resources/realm-export.json:/opt/keycloak/data/import/realm-export.json
+      - ..\app-config-data\src\main\resources\realm-export.json:/opt/keycloak/data/import/realm-export.json
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
