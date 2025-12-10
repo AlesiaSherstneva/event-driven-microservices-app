@@ -71,7 +71,7 @@
                 <version>3.5.2</version>
                 <configuration>
                     <from>
-                        <image>eclipse-temurin:17-jre-alpine</image>
+                        <image>mirror.gcr.io/library/eclipse-temurin:17-jre-alpine</image>
                     </from>
                     <to>
                         <image>${project.groupId}/twitter.to.kafka.service:${project.version}</image>
