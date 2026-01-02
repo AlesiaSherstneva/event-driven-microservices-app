@@ -1,10 +1,10 @@
 package com.microservices.security;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
+@AllArgsConstructor
 public enum PermissionType {
     READ("READ"), WRITE("WRITE"), ADMIN("ADMIN");
 
