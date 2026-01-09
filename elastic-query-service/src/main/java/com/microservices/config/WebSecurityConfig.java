@@ -22,7 +22,6 @@ import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.JwtDecoders;
 import org.springframework.security.oauth2.jwt.JwtValidators;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -32,7 +31,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class WebSecurityConfig {
     private final TwitterQueryUserDetailsService userDetailsService;
-    private final OAuth2ResourceServerProperties resourceServerProperties;
+    private final OAuth2ResourceServerProperties properties;
 
     @Value("${security.paths-to-ignore}")
     private String[] pathsToIgnore;
@@ -56,14 +55,14 @@ public class WebSecurityConfig {
     @Bean
     JwtDecoder jwtDecoder(@Qualifier("elastic-query-service-audience-validator")
                           OAuth2TokenValidator<Jwt> audienceValidator) {
-        OAuth2TokenValidator<Jwt> withIssuer = JwtValidators.createDefaultWithIssuer(
-                resourceServerProperties.getJwt().getIssuerUri()
-        );
+        String issuerUri = properties.getJwt().getIssuerUri();
+        String jwkSetUri = properties.getJwt().getJwkSetUri();
+
+        NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withJwkSetUri(jwkSetUri).build();
+
+        OAuth2TokenValidator<Jwt> withIssuer = JwtValidators.createDefaultWithIssuer(issuerUri);
         OAuth2TokenValidator<Jwt> withAudience = new DelegatingOAuth2TokenValidator<>(withIssuer, audienceValidator);
 
-        NimbusJwtDecoder jwtDecoder = JwtDecoders.fromOidcIssuerLocation(
-                resourceServerProperties.getJwt().getIssuerUri()
-        );
         jwtDecoder.setJwtValidator(withAudience);
 
         return jwtDecoder;
@@ -74,7 +73,7 @@ public class WebSecurityConfig {
         return (web) -> web.ignoring().requestMatchers(pathsToIgnore);
     }
 
-    private Converter<Jwt,? extends AbstractAuthenticationToken> twitterQueryUserJwtConverter() {
+    private Converter<Jwt, ? extends AbstractAuthenticationToken> twitterQueryUserJwtConverter() {
         return new TwitterQueryUserJwtConverter(userDetailsService);
     }
 
