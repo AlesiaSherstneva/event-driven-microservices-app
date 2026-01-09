@@ -118,22 +118,26 @@ services:
     container_name: postgres
     environment:
       POSTGRES_DB: keycloak
-      POSTGRES_USER: keycloak
-      POSTGRES_PASSWORD: keycloak
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
       - 5433:5432
     volumes:
       - .\volumes\postgres\data:/var/lib/postgresql
     networks:
       - ${GLOBAL_NETWORK:-services}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d keycloak" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
 
   # Keycloak authorization server
   keycloak-authorization-server:
     image: quay.io/keycloak/keycloak:${KEYCLOAK_VERSION:-latest}
     container_name: keycloak-authorization-server
     hostname: keycloak-server
-    depends_on:
-      - postgres
     ports:
       - 8080:8080
     volumes:
@@ -145,8 +149,8 @@ services:
       KC_DB_URL_HOST: postgres
       KC_DB_URL_PORT: 5432
       KC_DB_URL_DATABASE: keycloak
-      KC_DB_USERNAME: keycloak
-      KC_DB_PASSWORD: keycloak
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: postgres
       KC_HOSTNAME_STRICT: false
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
@@ -157,6 +161,9 @@ services:
         exec /opt/keycloak/bin/kc.sh start-dev
     networks:
       - ${GLOBAL_NETWORK:-services}
+    depends_on:
+      config-server:
+        condition: service_healthy
 
 networks:
   application:
