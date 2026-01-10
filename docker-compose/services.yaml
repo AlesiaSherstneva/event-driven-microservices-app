@@ -10,10 +10,10 @@ services:
       - "LOGGING_LEVEL_COM_MICROSERVICES=info"
       - "LOGGING_LEVEL_ROOT=info"
       - "KAFKA-CONFIG_TOPIC-NAME=twitter-topic"
-      - "KAFKA-CONFIG_BOOTSTRAP-SERVERS=kafka-broker-1:9092, kafka-broker-2:9092, kafka-broker-3:9092"
+      - "KAFKA-CONFIG_BOOTSTRAP-SERVERS=kafka-broker-1:9192, kafka-broker-2:9192, kafka-broker-3:9192"
       - "KAFKA-CONFIG_SCHEMA-REGISTRY-URL=http://schema-registry:8081"
-      - "TWITTER-TO-KAFKA-SERVICE_ENABLE-MOCK-TWEETS=true"
-      - "SPRING_CLOUD_CONFIG_URI=http://config-server:8888"
+      - "TWITTER_TO_KAFKA_SERVICE-ENABLE_MOCK_TWEETS=true"
+      - "CONFIG_SERVER_HOST=http://config-server:8888"
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
     networks:
       - ${GLOBAL_NETWORK:-services}
@@ -36,11 +36,10 @@ services:
     environment:
       - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006 -Xms128m -Xmx256m"
       - "LOGGING_LEVEL_COM_MICROSERVICES=info"
-      - "LOGGING_LEVEL_ROOT=debug"
       - "KAFKA-CONFIG_TOPIC-NAME=twitter-topic"
-      - "KAFKA-CONFIG_BOOTSTRAP-SERVERS=kafka-broker-1:9092, kafka-broker-2:9092, kafka-broker-3:9092"
+      - "KAFKA-CONFIG_BOOTSTRAP-SERVERS=kafka-broker-1:9192, kafka-broker-2:9192, kafka-broker-3:9192"
       - "KAFKA-CONFIG_SCHEMA-REGISTRY-URL=http://schema-registry:8081"
-      - "SPRING_CONFIG_IMPORT=configserver:http://config-server:8888"
+      - "CONFIG_SERVER_HOST=http://config-server:8888"
       - "ELASTIC-CONFIG_INDEX-NAME=twitter-index"
       - "ELASTIC-CONFIG_CONNECTION-URL=http://elastic:9200"
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
@@ -58,7 +57,7 @@ services:
       kafka-3:
         condition: service_started
       elastic:
-        condition: service_started
+        condition: service_healthy
 
   config-server:
     image: ${GROUP_ID}/config.server:${SERVICE_VERSION:-latest}
@@ -96,12 +95,12 @@ services:
       - "ELASTIC-CONFIG_CONNECTION-URL=http://elastic:9200"
       - "SERVER_PORT=8183"
       - "SERVER_SERVLET_CONTEXT-PATH=/elastic-query-service"
-      - "SPRING_CONFIG_IMPORT=configserver:http://config-server:8888"
+      - "CONFIG_SERVER_HOST=http://config-server:8888"
+      - "DB_HOST=postgres"
+      - "DB_PORT=5432"
+      - "KEYCLOAK_HOST=keycloak-authorization-server"
+      - "KEYCLOAK_PORT=8080"
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
-
-      # temporary KEYCLOAK configs
-      - "SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=http://keycloak-authorization-server:8080/realms/twitter-service-realm"
-      - "SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI=http://keycloak-authorization-server:8080/realms/twitter-service-realm/protocol/openid-connect/certs"
     networks:
       - ${GLOBAL_NETWORK:-services}
     depends_on:
@@ -110,7 +109,7 @@ services:
       kafka-to-elastic-service:
         condition: service_started
       elastic:
-        condition: service_started
+        condition: service_healthy
 
   elastic-query-service-2:
     image: ${GROUP_ID}/elastic.query.service:${SERVICE_VERSION:-latest}
@@ -127,12 +126,12 @@ services:
       - "ELASTIC-CONFIG_CONNECTION-URL=http://elastic:9200"
       - "SERVER_PORT=8185"
       - "SERVER_SERVLET_CONTEXT-PATH=/elastic-query-service"
-      - "SPRING_CONFIG_IMPORT=configserver:http://config-server:8888"
+      - "CONFIG_SERVER_HOST=http://config-server:8888"
+      - "DB_HOST=postgres"
+      - "DB_PORT=5432"
+      - "KEYCLOAK_HOST=keycloak-authorization-server"
+      - "KEYCLOAK_PORT=8080"
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
-
-      # temporary KEYCLOAK configs
-      - "SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=http://keycloak-authorization-server:8080/realms/twitter-service-realm"
-      - "SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI=http://keycloak-authorization-server:8080/realms/twitter-service-realm/protocol/openid-connect/certs"
     networks:
       - ${GLOBAL_NETWORK:-services}
     depends_on:
