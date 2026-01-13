@@ -23,7 +23,7 @@ Keycloak, Kafka Streams, ELK-stack.
 | Что было в курсе | Что я использовала |
 |:-:|:-:|
 | Java 11 | Java 17 |
-| Spring Boot 2.3.4 | Spring Boot 3.5.0 |
+| Spring Boot 2.3.4 | Spring Boot 3.5.3 |
 | Spring Cloud 2.2.6.RELEASE | Spring Cloud 4.3.0 |
 | Spring Boot Build-Image (Buildpacks) | Google Jib Maven Plugin |
 | Logback | Log4j2 |
@@ -55,8 +55,11 @@ docker-compose up -d
 Список запущенных сервисов:
 | Сервис | Порт | Назначение |
 |:-------|:----:|:-----------|
-| twitter-to-kafka-service | 5005 | Получение/генерация потока твитов |
-| config-server | 5006 | Общий сервер конфигураций |
+| config-server | 5007 | Общий сервер конфигураций |
+| twitter-to-kafka-service | 5005 | Получение/генерация потока твитов и передача их в Kafka |
+| kafka-to-elastic-service | 5006 | Получение твитов из Kafka, их индексация и передача в Elasticsearch |
+| elastic-query-services | 5008, 5009 | Предоставление доступа к твитам через REST-запросы |
+| elastic-query-web-client | 5010 | Предоставление доступа к твитам через UI-интерфейс |
 
 Список запущенной инфраструктуры:
 | Сервис | Порт | Назначение |
@@ -66,101 +69,6 @@ docker-compose up -d
 | Elasticsearch | 9200 | NoSQL база данных для поиска и аналитики |
 | Postgres | 5433 | База данных для Keycloak |
 | Keycloak | 8080 | Сервер аутентификации |
-</details>
-
-<details>
-<summary>Настройка Keycloak</summary>
-
-1. В браузере войти в UI Keycloak (`http://localhost:8080/`) под учётными данными администратора:
-- :key: `admin`
-- :lock: `admin`
-
-2. Создать realm (область/домен):
-- левое меню: "Manage realms"
-- выбрать "Create realm"
-- в поле "Realm name" name ввести имя домена (например, `twitter-service-realm`) → "Create"
-
-3. Настроить roles (уровни доступа):
-- левое меню: "Realm roles"
-- выбрать "Create role"
-- в поле "Role name" ввести название роли для пользователя (например, `app_user_role`) → "Save"
-- аналогичным способом создать роли для пользователя с расширенными привилегиями и администратора
-(например, `app_super_user_role` и `app_admin_role`)
-
-4. Создать groups (группы уровней доступа):
-- левое меню: "Groups"
-- выбрать "Create group"
-- в поле "Name" ввести название группы для пользователей (например, `app_user_group`) → "Create"
-- кликнуть на имя созданной группы → "Role mapping" → "Assign role" → "Realm roles" → выбрать 
-соответствующую роль
-- аналогично создать группы для привилегированных пользователей и администраторов (например,
-`app_super_user_group` и `app_admin_group`), назначить им соответствующие роли
-
-5. Создать users (пользователей):
-- левое меню: "Users"
-- выбрать "Create new user"
-- в поле "Username" ввести имя пользователя (например, `app_user`) → "Join Groups" → выбрать соответствующую
-группу → "Join" → "Create"
-- выбрать "Credentials" → "Set password" → дважды ввести пароль пользователя, перевести "Temporary" 
-в положение "Off" → "Save" → "Save password"
-- аналогично создать администратора и пользователя с расширенными привилегиями (например, `app_admin` и 
-`app_super_user`), включить их в соответствующие группы
-
-6. Создать Client (клиента):
-- левое меню: "Clients"
-- выбрать "Create client", заполнить настройки нового клиента:
-    - "Client ID" - `elastic-query-web-client`
-    - "Client authentication" - перевести в положение "On"
-    - "Home URL" - `http://localhost:8184/elastic-query-web-client`
-    - "Valid Redirect URIs":
-        - `http://localhost:8184/elastic-query-web-client/login/oauth2/code/keycloak`
-        - `http://localhost:8184/elastic-query-web-client`
-    - "Web origins" - `http://localhost:8184`
-- сохранить клиента кнопкой "Save"
-
-7. Настроить Client Scopes (области доступов клиентов):
-- левое меню: "Client scopes"
-- выбрать "Create client scope", заполнить настройки:
-  - "Name" - ввести название роли для пользователя (например, `app_user_role`)
-  - "Type" - из выпадающего меню выбрать "Default"
-- сохранить область доступа кнопкой "Save"
-- перейти на вкладку "Scope" → "Assign role" → "Realm roles" → выбрать ранее созданную роль пользователя
-→ "Assign"
-- аналогично создать области доступов для администратора и привилегированного пользователя (например,
-`app_admin_role` и `app_super_user_role`), назначить им соответствующие роли
-
-8. Создать ещё одного Client (клиента):
-- левое меню: "Clients"
-- выбрать "Create client", заполнить настройки:
-  - "Client ID" - `elastic-query-service`
-  - "Client authentication" - перевести в положение "On"
-  - "Valid Redirect URIs" - `http://localhost:8184/elastic-query-service/login/oauth2/code/keycloak`
-- сохранить клиента кнопкой "Save"
-
-9. Настроить Mappers (мапперы) для `elastic-query-web-client`:
-- левое меню: "Clients"
-- кликнуть на имя клиента → "Client scopes" → `elastic-query-web-client-dedicated` → "Add predefined mappers"
-- найти маппер под названием "groups" → "Add"
-- "Add mapper" → "By configuration" → выбрать "Audience", заполнить настройки:
-  - "Name" - `elastic-query-service`
-  - "Include Client Audience" - выбрать "elastic-query-service" из выпадающего меню
-  - "Add to ID token" - перевести в положение "On"
-  - "Add to access token" - перевести в положение "On"
-- сохранить маппер кнопкой "Save"
-- "Add mapper" → "By configuration" → выбрать "User Session Note", заполнить настройки:
-  - "Name" - client-id
-  - "User Session Note" - clientID
-  - "Token Claim Name" - clientID
-- аналогично создать ещё два маппера "User Session Note" со следующими настройками:
-  - "Name" - client-host, "User Session Note" - clientHost, "Token Claim Name" - clientHost
-  - "Name" - client-ip, "User Session Note" - clientIPAddress, "Token Claim Name" - clientIPAddress
-
-10. Настроить мапперы для `elastic-query-service` (аналогично описанным в пункте 9):
-- маппер "groups"
-- три маппера "User Session Note"
-- два маппера "Audience" с полями "Name":
-  - `kafka-streams-service`
-  - `analytics-service`
 </details>
 
 ## twitter-to-kafka-service
