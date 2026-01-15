@@ -1,5 +1,7 @@
 services:
   twitter-to-kafka-service:
+    # disable service temporarily
+    profiles: [ "disabled" ]
     image: ${GROUP_ID}/twitter.to.kafka.service:${SERVICE_VERSION:-latest}
     ports:
       - "5005:5005"
@@ -28,6 +30,8 @@ services:
         condition: service_started
 
   kafka-to-elastic-service:
+    # disable service temporarily
+    profiles: ["disabled"]
     image: ${GROUP_ID}/kafka.to.elastic.service:${SERVICE_VERSION:-latest}
     ports:
       - "5006:5006"
@@ -106,12 +110,14 @@ services:
     depends_on:
       config-server:
         condition: service_healthy
-      kafka-to-elastic-service:
-        condition: service_started
+      # kafka-to-elastic-service:
+        # condition: service_started
       elastic:
         condition: service_healthy
 
   elastic-query-service-2:
+    # disable service temporarily
+    profiles: [ "disabled" ]
     image: ${GROUP_ID}/elastic.query.service:${SERVICE_VERSION:-latest}
     ports:
       - "5009:5009"
