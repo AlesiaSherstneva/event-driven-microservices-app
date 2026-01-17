@@ -43,6 +43,9 @@ spring:
           keycloak:
             issuerUri: http://localhost:8080/auth/realm/twitter-service-realm
 
+security:
+  logout-success-url: http://localhost:8184/elastic-query-web-client
+
 user-config:
   username: test
   password: '{bcrypt}$2a$12$lONUZ9zZT/HeRCLYWTHl.eoIKi5VqRl2dR/xHxCaYCi2qsKzssBuy' # test1234
