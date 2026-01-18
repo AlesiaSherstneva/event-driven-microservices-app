@@ -41,10 +41,11 @@ spring:
             scope: openid
         provider:
           keycloak:
-            issuerUri: http://localhost:8080/auth/realm/twitter-service-realm
+            issuerUri: http://${KEYCLOAK_HOST:localhost}:${KEYCLOAK_PORT:8080}/realms/twitter-service-realm
 
 security:
   logout-success-url: http://localhost:8184/elastic-query-web-client
+  default-client-registration-id: keycloak
 
 user-config:
   username: test
