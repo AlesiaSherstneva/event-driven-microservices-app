@@ -42,6 +42,7 @@ spring:
         provider:
           keycloak:
             issuerUri: http://${KEYCLOAK_HOST:localhost}:${KEYCLOAK_PORT:8080}/realms/twitter-service-realm
+            authorization-uri: http://localhost:8080/realms/twitter-service-realm/protocol/openid-connect/auth
 
 security:
   logout-success-url: http://localhost:8184/elastic-query-web-client
