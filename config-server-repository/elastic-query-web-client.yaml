@@ -36,13 +36,16 @@ spring:
           keycloak:
             client-id: 'elastic-query-web-client'
             client-secret: '8y1aBQJO8/6Z7o9/uo937FHs2Y3CfrDf5Gl88xKSdUY='
-            authorization-grand-type: authorization_code
+            authorization-grant-type: authorization_code
             redirect-uri: '{baseUrl}/login/oauth2/code/{registrationId}'
             scope: openid
         provider:
           keycloak:
-            issuerUri: http://${KEYCLOAK_HOST:localhost}:${KEYCLOAK_PORT:8080}/realms/twitter-service-realm
             authorization-uri: http://localhost:8080/realms/twitter-service-realm/protocol/openid-connect/auth
+            token-uri: http://${KEYCLOAK_HOST:localhost}:${KEYCLOAK_PORT:8080}/realms/twitter-service-realm/protocol/openid-connect/token
+            jwk-set-uri: http://${KEYCLOAK_HOST:localhost}:${KEYCLOAK_PORT:8080}/realms/twitter-service-realm/protocol/openid-connect/certs
+            user-info-uri: http://${KEYCLOAK_HOST:localhost}:${KEYCLOAK_PORT:8080}/realms/twitter-service-realm/protocol/openid-connect/userinfo
+            user-name-attribute: preferred_username
 
 security:
   logout-success-url: http://localhost:8184/elastic-query-web-client
