@@ -75,12 +75,16 @@ public class WebClientSecurityConfig {
 
                     OidcUserInfo userInfo = oidcUserAuthority.getUserInfo();
 
-                    List<SimpleGrantedAuthority> groupAuthorities = userInfo.getClaimAsStringList(GROUPS_CLAIM)
-                            .stream()
-                            .map(group -> new SimpleGrantedAuthority(ROLE_PREFIX.formatted(group.toUpperCase())))
-                            .toList();
+                    List<String> groups = userInfo != null
+                            ? userInfo.getClaimAsStringList(GROUPS_CLAIM)
+                            : oidcIdToken.getClaimAsStringList(GROUPS_CLAIM);
 
-                    mappedAuthorities.addAll(groupAuthorities);
+                    if (groups != null) {
+                        List<SimpleGrantedAuthority> groupAuthorities = groups.stream()
+                                .map(group -> new SimpleGrantedAuthority(ROLE_PREFIX.formatted(group.toUpperCase())))
+                                .toList();
+                        mappedAuthorities.addAll(groupAuthorities);
+                    }
                 }
             });
 

@@ -21,10 +21,14 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+import static org.springframework.security.oauth2.client.web.reactive.function.client.ServletOAuth2AuthorizedClientExchangeFilterFunction.clientRegistrationId;
+
 @Service
 public class TwitterElasticQueryWebClient implements ElasticQueryWebClient {
     private final WebClient.Builder webClientBuilder;
     private final ElasticQueryWebClientConfigData clientConfigData;
+
+    private static final String CLIENT_REGISTRATION_ID = "keycloak";
 
     public TwitterElasticQueryWebClient(@Qualifier("webClientBuilder") WebClient.Builder webClientBuilder,
                                         ElasticQueryWebClientConfigData clientConfigData) {
@@ -49,6 +53,7 @@ public class TwitterElasticQueryWebClient implements ElasticQueryWebClient {
                 .method(HttpMethod.valueOf(clientConfigData.getQueryByText().getMethod()))
                 .uri(clientConfigData.getQueryByText().getUri())
                 .accept(MediaType.valueOf(clientConfigData.getQueryByText().getAccept()))
+                .attributes(clientRegistrationId(CLIENT_REGISTRATION_ID))
                 .body(BodyInserters.fromPublisher(Mono.just(requestModel), createParametrizedTypeReference()))
                 .retrieve()
                 .onStatus(

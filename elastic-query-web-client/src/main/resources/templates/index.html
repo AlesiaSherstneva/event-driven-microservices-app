@@ -5,7 +5,7 @@
         <p>Please <a th:href="@{/home}">login</a> to start searching</p>
     </div>
     <div th:if="${#authorization.expression('isAuthenticated()')}">
-        <p>Hello, <span th:text="${#authentication.principal.fullname}"/><a th:href="@{/home}"> Let's get start searching!</a></p>
+        <p>Hello, <span th:text="${#authentication.getPrincipal().getPreferredUsername()}"/><a th:href="@{/home}"> Let's get start searching!</a></p>
     </div>
 </div>
 

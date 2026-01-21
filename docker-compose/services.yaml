@@ -116,8 +116,6 @@ services:
         condition: service_healthy
 
   elastic-query-service-2:
-    # disable service temporarily
-    profiles: [ "disabled" ]
     image: ${GROUP_ID}/elastic.query.service:${SERVICE_VERSION:-latest}
     ports:
       - "5009:5009"
@@ -143,8 +141,8 @@ services:
     depends_on:
       config-server:
         condition: service_healthy
-      kafka-to-elastic-service:
-        condition: service_started
+      # kafka-to-elastic-service:
+        # condition: service_started
       elastic:
         condition: service_started
 
@@ -171,10 +169,6 @@ services:
       - "ELASTIC-QUERY-WEB-CLIENT_WEB-CLIENT_INSTANCES_1_PORT=8185"
       - "KEYCLOAK_HOST=keycloak-authorization-server"
       - "KEYCLOAK_PORT=8080"
-
-      - "LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY_OAUTH2_CLIENT=DEBUG"
-      - "LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY_OAUTH2_JWT=DEBUG"
-
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
     networks:
       - ${GLOBAL_NETWORK:-services}
