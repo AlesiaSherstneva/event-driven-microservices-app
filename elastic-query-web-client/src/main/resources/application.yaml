@@ -4,7 +4,9 @@ spring:
   profiles:
     active: elastic_query_web
   config:
-    import: "optional:configserver:http://localhost:8888"
+    import: "optional:configserver:${config-server-host}"
+
+config-server-host: http://localhost:8888
 
 logging:
   config: "classpath:log4j2-common.xml"
