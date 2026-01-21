@@ -147,6 +147,7 @@ services:
     hostname: keycloak-server
     ports:
       - 8080:8080
+      - 9000:9000
     volumes:
       - ..\app-config-data\src\main\resources\realm-export.json:/opt/keycloak/data/import/realm-export.json
     environment:
@@ -161,6 +162,7 @@ services:
       KC_HOSTNAME_STRICT: false
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_HEALTH_ENABLED: true
     entrypoint: ["/bin/sh", "-c"]
     command:
       - |
@@ -168,6 +170,13 @@ services:
         exec /opt/keycloak/bin/kc.sh start-dev
     networks:
       - ${GLOBAL_NETWORK:-services}
+    healthcheck:
+      test: ["CMD-SHELL", "{ printf 'HEAD /health/ready HTTP/1.0\\r\\n\\r\\n' >&0; 
+              grep 'HTTP/1.0 200'; } 0<>/dev/tcp/localhost/9000"]
+      interval: 5s
+      timeout: 5s
+      retries: 40
+      start_period: 120s
     depends_on:
       config-server:
         condition: service_healthy
