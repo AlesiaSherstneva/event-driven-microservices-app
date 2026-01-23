@@ -32,7 +32,7 @@ public class ElasticQueryWebClientExceptionHandler {
         LOGGER.error("Illegal argument exception!", ex);
 
         model.addAttribute("error", HttpStatus.BAD_REQUEST.getReasonPhrase());
-        model.addAttribute("error_description", String.format("Illegal argument exception! %s", ex.getMessage()));
+        model.addAttribute("error_description", "Illegal argument exception! %s".formatted(ex.getMessage()));
 
         return "error";
     }
@@ -53,8 +53,8 @@ public class ElasticQueryWebClientExceptionHandler {
 
         model.addAttribute("elasticQueryWebClientRequestModel",
                 ElasticQueryWebClientResponseModel.builder().build());
-        model.addAttribute("error", String.format("Could not get response! %s", ex.getMessage()));
-        model.addAttribute("error_description", String.format("Service runtime exception! %s", ex.getMessage()));
+        model.addAttribute("error", "Could not get response! %s".formatted(ex.getMessage()));
+        model.addAttribute("error_description", "Service runtime exception! %s".formatted(ex.getMessage()));
 
         return "home";
     }
