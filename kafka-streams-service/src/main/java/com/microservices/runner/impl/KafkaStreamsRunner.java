@@ -8,11 +8,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.Properties;
+
 @Component
 @AllArgsConstructor
 public class KafkaStreamsRunner implements StreamsRunner<String, Long> {
     private final KafkaStreamsConfigData kafkaStreamsConfigData;
     private final KafkaConfigData kafkaConfigData;
+    private final Properties streamsConfiguration;
+
+    private static final String REGEX = "\\W+";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaStreamsRunner.class);
 
