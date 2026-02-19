@@ -4,10 +4,13 @@ import com.microservices.config.KafkaConfigData;
 import com.microservices.config.KafkaStreamsConfigData;
 import com.microservices.runner.StreamsRunner;
 import lombok.AllArgsConstructor;
+import org.apache.kafka.streams.StreamsBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
+import java.util.Map;
 import java.util.Properties;
 
 @Component
@@ -23,7 +26,12 @@ public class KafkaStreamsRunner implements StreamsRunner<String, Long> {
 
     @Override
     public void start() {
+        final Map<String, String> serdeConfig = Collections.singletonMap(
+            kafkaConfigData.getSchemaRegistryUrlKey(),
+            kafkaConfigData.getSchemaRegistryUrl()
+        );
 
+        final StreamsBuilder streamsBuilder = new StreamsBuilder();
     }
 
     @Override
