@@ -1,10 +1,12 @@
 package com.microservices.runner.impl;
 
+import com.microservices.avro.model.TwitterAvroModel;
 import com.microservices.config.KafkaConfigData;
 import com.microservices.config.KafkaStreamsConfigData;
 import com.microservices.runner.StreamsRunner;
 import lombok.AllArgsConstructor;
 import org.apache.kafka.streams.StreamsBuilder;
+import org.apache.kafka.streams.kstream.KStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -32,6 +34,14 @@ public class KafkaStreamsRunner implements StreamsRunner<String, Long> {
         );
 
         final StreamsBuilder streamsBuilder = new StreamsBuilder();
+
+        final KStream<Long, TwitterAvroModel> twitterAvroModelKStream =
+                getTwitterAvroModelKStream(serdeConfig, streamsBuilder);
+    }
+
+    private KStream<Long, TwitterAvroModel> getTwitterAvroModelKStream(Map<String, String> serdeConfig,
+                                                                       StreamsBuilder streamsBuilder) {
+
     }
 
     @Override
