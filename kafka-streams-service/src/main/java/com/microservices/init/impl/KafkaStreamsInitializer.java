@@ -21,6 +21,6 @@ public class KafkaStreamsInitializer implements StreamsInitializer {
         kafkaAdminClient.checkIfTopicsCreated();
         kafkaAdminClient.checkSchemaRegistry();
 
-        LOGGER.info("Topics {} are ready for operations", kafkaConfigData.getTopicNamesToCreate().toArray());
+        LOGGER.info("Topics {} are ready for operations", kafkaConfigData.getTopicNamesToCreate());
     }
 }

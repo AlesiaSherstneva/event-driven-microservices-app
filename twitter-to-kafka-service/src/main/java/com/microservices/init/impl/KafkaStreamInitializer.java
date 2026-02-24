@@ -21,6 +21,6 @@ public class KafkaStreamInitializer implements StreamInitializer {
         adminClient.createTopics();
         adminClient.checkSchemaRegistry();
 
-        LOGGER.info("Topics {} are ready for operations", configData.getTopicNamesToCreate().toArray());
+        LOGGER.info("Topics {} are ready for operations", configData.getTopicNamesToCreate());
     }
 }
