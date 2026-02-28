@@ -43,9 +43,10 @@
         <httpclient5.version>5.5</httpclient5.version>
         <json.version>20250517</json.version>
         <avro.version>1.12.0</avro.version>
-        <spring-kafka.version>4.0.0-M2</spring-kafka.version>
+        <spring-kafka.version>4.1.2</spring-kafka.version>
         <spring-retry.version>2.0.12</spring-retry.version>
         <spring-oauth.version>3.5.5</spring-oauth.version>
+        <kafka.version>4.2.2</kafka.version>
         <kafka-avro.version>8.3.2</kafka-avro.version>
         <spring-cloud.version>4.3.0</spring-cloud.version>
         <spring-cloud-dependencies.version>2025.0.0</spring-cloud-dependencies.version>
@@ -243,6 +244,16 @@
                 <version>${avro.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.apache.kafka</groupId>
+                <artifactId>kafka-streams</artifactId>
+                <version>${kafka.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.kafka</groupId>
+                <artifactId>kafka-clients</artifactId>
+                <version>${kafka.version}</version>
+            </dependency>
             <dependency>
                 <groupId>io.confluent</groupId>
                 <artifactId>kafka-avro-serializer</artifactId>

@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "elastic-query-web-client")
-@Profile("!twitter_to_kafka && !kafka_to_elastic")
+@Profile("!twitter_to_kafka && !kafka_to_elastic && !kafka_streams")
 public class ElasticQueryWebClientConfigData {
     private WebClient webClient;
     private Query queryByText;

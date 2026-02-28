@@ -1,5 +1,6 @@
 package com.microservices.security;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,13 +14,10 @@ import static com.microservices.Constants.NA;
 @Getter
 @Setter
 @Builder
+@AllArgsConstructor
 public class KafkaStreamsUser implements UserDetails {
     private String username;
     private Collection<? extends GrantedAuthority> authorities;
-
-    public KafkaStreamsUser(Collection<? extends GrantedAuthority> authorities) {
-        this.authorities = authorities;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

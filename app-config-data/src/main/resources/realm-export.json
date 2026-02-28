@@ -169,7 +169,7 @@
           "protocol": "openid-connect",
           "protocolMapper": "oidc-audience-mapper",
           "config": {
-            "included.client.audience": "kafka-streams-service",
+            "included.custom.audience": "kafka-streams-service",
             "id.token.claim": "true",
             "access.token.claim": "true"
           }
@@ -179,7 +179,7 @@
           "protocol": "openid-connect",
           "protocolMapper": "oidc-audience-mapper",
           "config": {
-            "included.client.audience": "analytics-service",
+            "included.custom.audience": "analytics-service",
             "id.token.claim": "true",
             "access.token.claim": "true"
           }
