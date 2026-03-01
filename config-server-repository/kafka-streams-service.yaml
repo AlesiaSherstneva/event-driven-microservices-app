@@ -42,5 +42,5 @@ kafka-streams-config:
   application-id: kafka-streams-application
   input-topic-name: twitter-topic
   output-topic-name: twitter-analytics-topic
-  state-file-location: ${HOME}/kafka-streaming-state
+  state-file-location: ${java.io.tmpdir}/kafka-streaming-state
   word-count-store-name: word-count-store
