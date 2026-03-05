@@ -1,6 +1,7 @@
 package com.microservices.service.impl;
 
 import com.microservices.common.exception.ElasticQueryWebClientException;
+import com.microservices.common.model.ElasticQueryWebClientAnalyticsResponseModel;
 import com.microservices.common.model.ElasticQueryWebClientRequestModel;
 import com.microservices.common.model.ElasticQueryWebClientResponseModel;
 import com.microservices.config.ElasticQueryWebClientConfigData;
@@ -39,12 +40,11 @@ public class TwitterElasticQueryWebClient implements ElasticQueryWebClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(TwitterElasticQueryWebClient.class);
 
     @Override
-    public List<ElasticQueryWebClientResponseModel> getDataByText(ElasticQueryWebClientRequestModel requestModel) {
+    public ElasticQueryWebClientAnalyticsResponseModel getDataByText(ElasticQueryWebClientRequestModel requestModel) {
         LOGGER.info("Querying by text: {}", requestModel.getText());
 
         return getWebClient(requestModel)
-                .bodyToFlux(ElasticQueryWebClientResponseModel.class)
-                .collectList()
+                .bodyToMono(ElasticQueryWebClientAnalyticsResponseModel.class)
                 .block();
     }
 

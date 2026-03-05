@@ -2,6 +2,8 @@ package com.microservices.api;
 
 import com.microservices.common.model.ElasticQueryServiceRequestModel;
 import com.microservices.common.model.ElasticQueryServiceResponseModel;
+import com.microservices.model.ElasticQueryServiceAnalyticsResponseModel;
+import com.microservices.security.TwitterQueryUser;
 import com.microservices.service.ElasticQueryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -17,6 +19,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -88,11 +93,18 @@ public class ElasticDocumentController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @PostMapping("/by-text")
-    public ResponseEntity<List<ElasticQueryServiceResponseModel>> getDocumentByText(
-            @RequestBody @Valid ElasticQueryServiceRequestModel requestModel) {
-        List<ElasticQueryServiceResponseModel> response = queryService.getDocumentByText(requestModel.getText());
+    public ResponseEntity<ElasticQueryServiceAnalyticsResponseModel> getDocumentByText(
+            @RequestBody @Valid ElasticQueryServiceRequestModel requestModel,
+            @AuthenticationPrincipal TwitterQueryUser principal,
+            @RegisteredOAuth2AuthorizedClient("keycloak")OAuth2AuthorizedClient authorizedClient) {
+        LOGGER.info("User {} querying documents for text: {}", principal.getUsername(), requestModel.getText());
 
-        LOGGER.info("Elasticsearch returned {} of documents on port {}", response.size(), port);
+        ElasticQueryServiceAnalyticsResponseModel response = queryService.getDocumentByText(
+                requestModel.getText(),
+                authorizedClient.getAccessToken().getTokenValue()
+        );
+
+        LOGGER.info("Elasticsearch returned {} of documents on port {}", response.getQueryResponseModels().size(), port);
 
         return ResponseEntity.ok(response);
     }

@@ -3,7 +3,7 @@ package com.microservices.service.impl;
 import com.microservices.config.ElasticConfigData;
 import com.microservices.config.ElasticQueryConfigData;
 import com.microservices.elastic.model.impl.TwitterIndexModel;
-import com.microservices.exception.ElasticQueryClientException;
+import com.microservices.exception.ElasticQueryServiceException;
 import com.microservices.service.ElasticQueryClient;
 import com.microservices.util.ElasticQueryUtil;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +43,7 @@ public class TwitterElasticQueryClient implements ElasticQueryClient<TwitterInde
             String errorMessage = String.format("No document with id %s found at the database", id);
             LOGGER.error(errorMessage);
 
-            throw new ElasticQueryClientException(errorMessage);
+            throw new ElasticQueryServiceException(errorMessage);
         }
     }
 
