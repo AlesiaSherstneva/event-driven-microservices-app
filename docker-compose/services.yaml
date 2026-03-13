@@ -1,7 +1,6 @@
 services:
   twitter-to-kafka-service:
-    # disable service temporarily
-    profiles: [ "disabled" ]
+    # profiles: ["disabled"]
     image: ${GROUP_ID}/twitter.to.kafka.service:${SERVICE_VERSION:-latest}
     ports:
       - "5005:5005"
@@ -12,6 +11,8 @@ services:
       - "LOGGING_LEVEL_COM_MICROSERVICES=info"
       - "LOGGING_LEVEL_ROOT=info"
       - "KAFKA-CONFIG_TOPIC-NAME=twitter-topic"
+      - "KAFKA-CONFIG_TOPIC-NAMES-TO-CREATE_0=twitter-topic"
+      - "KAFKA-CONFIG_TOPIC-NAMES-TO-CREATE_0=twitter-analytics-topic"
       - "KAFKA-CONFIG_BOOTSTRAP-SERVERS=kafka-broker-1:9192, kafka-broker-2:9192, kafka-broker-3:9192"
       - "KAFKA-CONFIG_SCHEMA-REGISTRY-URL=http://schema-registry:8081"
       - "TWITTER_TO_KAFKA_SERVICE-ENABLE_MOCK_TWEETS=true"
@@ -30,8 +31,7 @@ services:
         condition: service_started
 
   kafka-to-elastic-service:
-    # disable service temporarily
-    profiles: ["disabled"]
+    # profiles: ["disabled"]
     image: ${GROUP_ID}/kafka.to.elastic.service:${SERVICE_VERSION:-latest}
     ports:
       - "5006:5006"
@@ -104,14 +104,16 @@ services:
       - "DB_PORT=5432"
       - "KEYCLOAK_HOST=keycloak-authorization-server"
       - "KEYCLOAK_PORT=8080"
+      - "KAFKA_STREAMS_HOST=kafka-streams-service"
+      - "KAFKA_STREAMS_PORT=8187"
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
     networks:
       - ${GLOBAL_NETWORK:-services}
     depends_on:
       config-server:
         condition: service_healthy
-      # kafka-to-elastic-service:
-        # condition: service_started
+      kafka-to-elastic-service:
+        condition: service_started
       elastic:
         condition: service_healthy
 
@@ -135,14 +137,16 @@ services:
       - "DB_PORT=5432"
       - "KEYCLOAK_HOST=keycloak-authorization-server"
       - "KEYCLOAK_PORT=8080"
+      - "KAFKA_STREAMS_HOST=kafka-streams-service"
+      - "KAFKA_STREAMS_PORT=8187"
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
     networks:
       - ${GLOBAL_NETWORK:-services}
     depends_on:
       config-server:
         condition: service_healthy
-      # kafka-to-elastic-service:
-        # condition: service_started
+      kafka-to-elastic-service:
+        condition: service_started
       elastic:
         condition: service_started
 
@@ -175,5 +179,36 @@ services:
     depends_on:
       config-server:
         condition: service_healthy
+      keycloak-authorization-server:
+        condition: service_healthy
+
+  kafka-streams-service:
+    image: ${GROUP_ID}/kafka.streams.service:${SERVICE_VERSION:-latest}
+    ports:
+      - "5012:5012"
+      - "8187:8187"
+    volumes:
+      - "./docker-logs:/workspace/kafka-streams-service/logs"
+    environment:
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5012 -Xms128m -Xmx256m"
+      - "LOGGING_LEVEL_COM_MICROSERVICES=debug"
+      - "LOGGING_LEVEL_ROOT=debug"
+      - "SERVER_PORT=8187"
+      - "SERVER_SERVLET_CONTEXT-PATH=/kafka-streams-service"
+      - "KAFKA-CONFIG_BOOTSTRAP-SERVERS=kafka-broker-1:9192, kafka-broker-2:9192, kafka-broker-3:9192"
+      - "KAFKA-CONFIG_SCHEMA-REGISTRY-URL=http://schema-registry:8081"
+      - "CONFIG_SERVER_HOST=http://config-server:8888"
+      - "KEYCLOAK_HOST=keycloak-authorization-server"
+      - "KEYCLOAK_PORT=8080"
+      - "ENCRYPT_KEY=${ENCRYPT_KEY}"
+    depends_on:
+      config-server:
+        condition: service_healthy
+      kafka-1:
+        condition: service_started
+      kafka-2:
+        condition: service_started
+      kafka-3:
+        condition: service_started
       keycloak-authorization-server:
         condition: service_healthy
