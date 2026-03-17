@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS public.users CASCADE;
 
-CREATE TABLE public.users
+CREATE TABLE IF NOT EXISTS public.users
 (
     id        UUID NOT NULL,
     username  VARCHAR,
@@ -14,7 +14,7 @@ ALTER TABLE public.users
 
 DROP TABLE IF EXISTS public.documents CASCADE;
 
-CREATE TABLE public.documents
+CREATE TABLE IF NOT EXISTS public.documents
 (
     id          UUID    NOT NULL,
     document_id VARCHAR NOT NULL,
@@ -26,7 +26,7 @@ ALTER TABLE public.documents
 
 DROP TABLE IF EXISTS public.user_permissions CASCADE;
 
-CREATE TABLE public.user_permissions
+CREATE TABLE IF NOT EXISTS public.user_permissions
 (
     user_id            UUID NOT NULL,
     document_id        UUID NOT NULL,

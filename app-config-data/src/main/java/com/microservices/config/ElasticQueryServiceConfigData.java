@@ -2,11 +2,14 @@ package com.microservices.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "elastic-query-service")
+@Profile({"elastic_query", "elastic_query_reactive"})
 public class ElasticQueryServiceConfigData {
     private String version;
     private String customAudience;
@@ -23,6 +26,11 @@ public class ElasticQueryServiceConfigData {
         private String contentType;
         private String acceptType;
         private String queryType;
+    }
+
+    @Bean
+    public WebClient webClient() {
+        return webClient;
     }
 
     @Data

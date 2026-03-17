@@ -133,6 +133,7 @@ services:
       - "SERVER_PORT=8185"
       - "SERVER_SERVLET_CONTEXT-PATH=/elastic-query-service"
       - "CONFIG_SERVER_HOST=http://config-server:8888"
+      - "SPRING_SQL_INIT_MODE=never"
       - "DB_HOST=postgres"
       - "DB_PORT=5432"
       - "KEYCLOAK_HOST=keycloak-authorization-server"
@@ -201,6 +202,8 @@ services:
       - "KEYCLOAK_HOST=keycloak-authorization-server"
       - "KEYCLOAK_PORT=8080"
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
+    networks:
+      - ${GLOBAL_NETWORK:-services}
     depends_on:
       config-server:
         condition: service_healthy
