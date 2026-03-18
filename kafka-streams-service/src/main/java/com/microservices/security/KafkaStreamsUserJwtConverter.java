@@ -1,6 +1,7 @@
 package com.microservices.security;
 
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
@@ -31,8 +32,9 @@ public class KafkaStreamsUserJwtConverter implements Converter<Jwt, AbstractAuth
     private static final String DEFAULT_SCOPE_PREFIX = "SCOPE_%s";
     private static final String SCOPE_SEPARATOR = " ";
 
+    @NonNull
     @Override
-    public AbstractAuthenticationToken convert(Jwt jwt) {
+    public AbstractAuthenticationToken convert(@NonNull Jwt jwt) {
         Collection<GrantedAuthority> authoritiesFromJwt = getAuthoritiesFromJwt(jwt);
 
         return Optional.ofNullable(userDetailsService.loadUserByUsername(jwt.getClaimAsString(USERNAME_CLAIM)))

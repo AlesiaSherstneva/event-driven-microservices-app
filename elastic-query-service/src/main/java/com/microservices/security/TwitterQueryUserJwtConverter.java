@@ -27,8 +27,8 @@ public class TwitterQueryUserJwtConverter implements Converter<Jwt, AbstractAuth
     private static final String ROLES_CLAIM = "roles";
     private static final String SCOPE_CLAIM = "scope";
     private static final String USERNAME_CLAIM = "preferred_username";
-    private static final String DEFAULT_ROLE_PREFIX = "ROLE_";
-    private static final String DEFAULT_SCOPE_PREFIX = "SCOPE_";
+    private static final String DEFAULT_ROLE_PREFIX = "ROLE_%s";
+    private static final String DEFAULT_SCOPE_PREFIX = "SCOPE_%s";
     private static final String SCOPE_SEPARATOR = " ";
 
     @NonNull
@@ -63,7 +63,7 @@ public class TwitterQueryUserJwtConverter implements Converter<Jwt, AbstractAuth
 
         if (roles instanceof Collection) {
             return ((Collection<String>) roles).stream()
-                    .map(authority -> DEFAULT_ROLE_PREFIX + authority.toUpperCase())
+                    .map(authority -> DEFAULT_ROLE_PREFIX.formatted(authority.toUpperCase()))
                     .collect(Collectors.toList());
         }
 
@@ -75,7 +75,7 @@ public class TwitterQueryUserJwtConverter implements Converter<Jwt, AbstractAuth
 
         if (scopes instanceof String) {
             return Arrays.stream(((String) scopes).split(SCOPE_SEPARATOR))
-                    .map(authority -> DEFAULT_SCOPE_PREFIX + authority.toUpperCase())
+                    .map(authority -> DEFAULT_SCOPE_PREFIX.formatted(authority.toUpperCase()))
                     .collect(Collectors.toList());
         }
 

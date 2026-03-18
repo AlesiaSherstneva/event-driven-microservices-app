@@ -24,7 +24,6 @@
             <groupId>com.microservices</groupId>
             <artifactId>kafka-model</artifactId>
         </dependency>
-
         <dependency>
             <groupId>com.microservices</groupId>
             <artifactId>elastic-model</artifactId>
