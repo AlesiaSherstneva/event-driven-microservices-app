@@ -88,7 +88,6 @@ services:
     image: ${GROUP_ID}/elastic.query.service:${SERVICE_VERSION:-latest}
     ports:
       - "5008:5008"
-      - "8183:8183"
     volumes:
       - "./docker-logs:/workspace/elastic-query-service/logs"
     environment:
@@ -121,7 +120,6 @@ services:
     image: ${GROUP_ID}/elastic.query.service:${SERVICE_VERSION:-latest}
     ports:
       - "5009:5009"
-      - "8185:8185"
     volumes:
       - "./docker-logs:/workspace/elastic-query-service/logs"
     environment:
@@ -155,7 +153,6 @@ services:
     image: ${GROUP_ID}/elastic.query.web.client:${SERVICE_VERSION:-latest}
     ports:
       - "5010:5010"
-      - "8184:8184"
     volumes:
       - "./docker-logs:/workspace/elastic-query-web-client/logs"
     environment:
@@ -187,7 +184,6 @@ services:
     image: ${GROUP_ID}/kafka.streams.service:${SERVICE_VERSION:-latest}
     ports:
       - "5012:5012"
-      - "8187:8187"
     volumes:
       - "./docker-logs:/workspace/kafka-streams-service/logs"
     environment:
@@ -204,6 +200,25 @@ services:
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
     networks:
       - ${GLOBAL_NETWORK:-services}
+    depends_on:
+      config-server:
+        condition: service_healthy
+      kafka-1:
+        condition: service_started
+      kafka-2:
+        condition: service_started
+      kafka-3:
+        condition: service_started
+      keycloak-authorization-server:
+        condition: service_healthy
+
+  analytics-service:
+    image: ${GROUP_ID}/analytics.service:${SERVICE_VERSION:-latest}
+    ports:
+      - "5013:5013"
+    volumes:
+      - "./docker-logs:/workspace/analytics-service/logs"
+    environment:
     depends_on:
       config-server:
         condition: service_healthy
