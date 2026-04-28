@@ -219,6 +219,12 @@ services:
     volumes:
       - "./docker-logs:/workspace/analytics-service/logs"
     environment:
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5013 -Xms128m -Xmx256m"
+      - "LOGGING_LEVEL_COM_MICROSERVICES=debug"
+      - "LOGGING_LEVEL_ROOT=debug"
+      - "SERVER_PORT=8188"
+      - "SERVER_SERVLET_CONTEXT-PATH=/kafka-streams-service"
+      - "CONFIG_SERVER_HOST=http://config-server:8888"
     depends_on:
       config-server:
         condition: service_healthy
