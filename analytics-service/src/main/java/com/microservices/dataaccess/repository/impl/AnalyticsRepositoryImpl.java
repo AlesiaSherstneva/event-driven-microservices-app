@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 
@@ -22,6 +23,7 @@ public class AnalyticsRepositoryImpl<T extends BaseEntity<PK>, PK> implements An
     private static final Logger LOGGER = LoggerFactory.getLogger(AnalyticsRepositoryImpl.class);
 
     @Override
+    @Transactional
     public <S extends T> PK persist(S entity) {
         entityManager.persist(entity);
 
@@ -29,6 +31,7 @@ public class AnalyticsRepositoryImpl<T extends BaseEntity<PK>, PK> implements An
     }
 
     @Override
+    @Transactional
     public <S extends T> void batchPersist(Collection<S> entities) {
         if (entities.isEmpty()) {
             LOGGER.info("No entity found to insert");
@@ -55,11 +58,13 @@ public class AnalyticsRepositoryImpl<T extends BaseEntity<PK>, PK> implements An
     }
 
     @Override
+    @Transactional
     public <S extends T> S merge(S entity) {
         return entityManager.merge(entity);
     }
 
     @Override
+    @Transactional
     public <S extends T> void batchMerge(Collection<S> entities) {
         if (entities.isEmpty()) {
             LOGGER.info("No entity found to insert");

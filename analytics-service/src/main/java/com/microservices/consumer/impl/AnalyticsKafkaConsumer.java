@@ -42,7 +42,7 @@ public class AnalyticsKafkaConsumer implements KafkaConsumer<TwitterAnalyticsAvr
     }
 
     @Override
-    @KafkaListener(id = "twitterAnalyticsTopicListener", topics = {"kafka-config.topic-name"}, autoStartup = "false")
+    @KafkaListener(id = "twitterAnalyticsTopicListener", topics = "${kafka-config.topic-name}", autoStartup = "false")
     public void receive(@Payload List<TwitterAnalyticsAvroModel> messages,
                         @Header(KafkaHeaders.RECEIVED_KEY) List<String> keys,
                         @Header(KafkaHeaders.RECEIVED_PARTITION) List<Integer> partitions,

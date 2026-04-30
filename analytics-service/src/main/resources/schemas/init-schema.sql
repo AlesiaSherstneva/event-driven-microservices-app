@@ -12,5 +12,5 @@ CREATE TABLE IF NOT EXISTS analytics.twitter_analytics
 ALTER TABLE analytics.twitter_analytics
     OWNER TO postgres;
 
-CREATE INDEX idx_word_by_date
+CREATE INDEX IF NOT EXISTS idx_word_by_date
     ON analytics.twitter_analytics (word ASC NULLS LAST, record_date DESC NULLS LAST);

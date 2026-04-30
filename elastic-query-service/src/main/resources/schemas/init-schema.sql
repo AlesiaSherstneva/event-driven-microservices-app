@@ -41,8 +41,8 @@ CREATE TABLE IF NOT EXISTS public.user_permissions
 ALTER TABLE public.user_permissions
     OWNER TO postgres;
 
-CREATE INDEX fki_user_fk
+CREATE INDEX IF NOT EXISTS fki_user_fk
     ON public.user_permissions (user_id);
 
-CREATE INDEX fki_document_fk
+CREATE INDEX IF NOT EXISTS fki_document_fk
     ON public.user_permissions (document_id);

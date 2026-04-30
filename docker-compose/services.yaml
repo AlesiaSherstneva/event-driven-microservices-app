@@ -12,7 +12,7 @@ services:
       - "LOGGING_LEVEL_ROOT=info"
       - "KAFKA-CONFIG_TOPIC-NAME=twitter-topic"
       - "KAFKA-CONFIG_TOPIC-NAMES-TO-CREATE_0=twitter-topic"
-      - "KAFKA-CONFIG_TOPIC-NAMES-TO-CREATE_0=twitter-analytics-topic"
+      - "KAFKA-CONFIG_TOPIC-NAMES-TO-CREATE_1=twitter-analytics-topic"
       - "KAFKA-CONFIG_BOOTSTRAP-SERVERS=kafka-broker-1:9192, kafka-broker-2:9192, kafka-broker-3:9192"
       - "KAFKA-CONFIG_SCHEMA-REGISTRY-URL=http://schema-registry:8081"
       - "TWITTER_TO_KAFKA_SERVICE-ENABLE_MOCK_TWEETS=true"
@@ -88,6 +88,7 @@ services:
     image: ${GROUP_ID}/elastic.query.service:${SERVICE_VERSION:-latest}
     ports:
       - "5008:5008"
+      - "8183:8183"
     volumes:
       - "./docker-logs:/workspace/elastic-query-service/logs"
     environment:
@@ -104,9 +105,9 @@ services:
       - "KEYCLOAK_HOST=keycloak-authorization-server"
       - "KEYCLOAK_PORT=8080"
       - "KAFKA_STREAMS_HOST=kafka-streams-service"
-      - "KAFKA_STREAMS_PORT=5012"
+      - "KAFKA_STREAMS_PORT=8187"
       - "ANALYTICS_HOST=analytics-service"
-      - "ANALYTICS_PORT=5013"
+      - "ANALYTICS_PORT=8188"
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
     networks:
       - ${GLOBAL_NETWORK:-services}
@@ -122,6 +123,7 @@ services:
     image: ${GROUP_ID}/elastic.query.service:${SERVICE_VERSION:-latest}
     ports:
       - "5009:5009"
+      - "8185:8185"
     volumes:
       - "./docker-logs:/workspace/elastic-query-service/logs"
     environment:
@@ -141,7 +143,7 @@ services:
       - "KAFKA_STREAMS_HOST=kafka-streams-service"
       - "KAFKA_STREAMS_PORT=8187"
       - "ANALYTICS_HOST=analytics-service"
-      - "ANALYTICS_PORT=5013"
+      - "ANALYTICS_PORT=8188"
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
     networks:
       - ${GLOBAL_NETWORK:-services}
@@ -157,6 +159,7 @@ services:
     image: ${GROUP_ID}/elastic.query.web.client:${SERVICE_VERSION:-latest}
     ports:
       - "5010:5010"
+      - "8184:8184"
     volumes:
       - "./docker-logs:/workspace/elastic-query-web-client/logs"
     environment:
@@ -188,6 +191,7 @@ services:
     image: ${GROUP_ID}/kafka.streams.service:${SERVICE_VERSION:-latest}
     ports:
       - "5012:5012"
+      - "8187:8187"
     volumes:
       - "./docker-logs:/workspace/kafka-streams-service/logs"
     environment:
@@ -220,19 +224,23 @@ services:
     image: ${GROUP_ID}/analytics.service:${SERVICE_VERSION:-latest}
     ports:
       - "5013:5013"
+      - "8188:8188"
     volumes:
       - "./docker-logs:/workspace/analytics-service/logs"
     environment:
       - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5013 -Xms128m -Xmx256m"
-      - "LOGGING_LEVEL_COM_MICROSERVICES=debug"
-      - "LOGGING_LEVEL_ROOT=debug"
+      - "LOGGING_LEVEL_COM_MICROSERVICES=info"
+      - "LOGGING_LEVEL_ROOT=info"
+      - "LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_JDBC_DATASOURCE_INIT=debug"
       - "SERVER_PORT=8188"
-      - "SERVER_SERVLET_CONTEXT-PATH=/kafka-streams-service"
-      - "KAFKA-CONFIG_BOOTSTRAP-SERVERS=kafka-broker-1:9192, kafka-broker-2:9192, kafka-broker-3:9192"\
+      - "SERVER_SERVLET_CONTEXT-PATH=/analytics-service"
+      - "KAFKA-CONFIG_BOOTSTRAP-SERVERS=kafka-broker-1:9192, kafka-broker-2:9192, kafka-broker-3:9192"
       - "KAFKA-CONFIG_SCHEMA-REGISTRY-URL=http://schema-registry:8081"
       - "CONFIG_SERVER_HOST=http://config-server:8888"
       - "KEYCLOAK_HOST=keycloak-authorization-server"
       - "KEYCLOAK_PORT=8080"
+      - "DB_HOST=postgres"
+      - "DB_PORT=5432"
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
     networks:
       - ${GLOBAL_NETWORK:-services}
