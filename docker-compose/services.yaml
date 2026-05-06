@@ -187,6 +187,27 @@ services:
       keycloak-authorization-server:
         condition: service_healthy
 
+  elastic-query-web-client-reactive:
+    image: ${GROUP_ID}/elastic.query.web.client.reactive:${SERVICE_VERSION:-latest}
+    ports:
+      - "5011:5011"
+      - "8189:8184"
+    volumes:
+      - "./docker-logs:/workspace/elastic-query-web-client-reactive/logs"
+    environment:
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5011 -Xms128m -Xmx256m"
+      - "LOGGING_LEVEL_COM_MICROSERVICES=info"
+      - "LOGGING_LEVEL_ROOT=info"
+      - "SERVER_PORT=8184"
+      - "SERVER_SERVLET_CONTEXT-PATH=/elastic-query-web-client-reactive"
+      - "CONFIG_SERVER_HOST=http://config-server:8888"
+      - "ENCRYPT_KEY=${ENCRYPT_KEY}"
+    networks:
+      - ${GLOBAL_NETWORK:-services}
+    depends_on:
+      config-server:
+        condition: service_healthy
+
   kafka-streams-service:
     image: ${GROUP_ID}/kafka.streams.service:${SERVICE_VERSION:-latest}
     ports:
