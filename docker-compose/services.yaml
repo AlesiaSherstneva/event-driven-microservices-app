@@ -155,6 +155,31 @@ services:
       elastic:
         condition: service_started
 
+  elastic-query-service-reactive:
+    image: ${GROUP_ID}/elastic.query.service.reactive:${SERVICE_VERSION:-latest}
+    ports:
+      - "5014:5014"
+      - "8190:8183"
+    volumes:
+      - "./docker-logs:/workspace/elastic-query-service-reactive/logs"
+    environment:
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5014 -Xms128m -Xmx256m"
+      - "LOGGING_LEVEL_COM_MICROSERVICES=info"
+      - "LOGGING_LEVEL_ROOT=info"
+      - "ELASTIC-CONFIG_INDEX-NAME=twitter-index"
+      - "SPRING_ELASTICSEARCH_URIS=http://elastic:9200"
+      - "SERVER_PORT=8183"
+      - "SERVER_SERVLET_CONTEXT-PATH=/elastic-query-service-reactive"
+      - "CONFIG_SERVER_HOST=http://config-server:8888"
+      - "ENCRYPT_KEY=${ENCRYPT_KEY}"
+    networks:
+      - ${GLOBAL_NETWORK:-services}
+    depends_on:
+      config-server:
+        condition: service_healthy
+      elastic:
+        condition: service_healthy
+
   elastic-query-web-client:
     image: ${GROUP_ID}/elastic.query.web.client:${SERVICE_VERSION:-latest}
     ports:
@@ -207,7 +232,7 @@ services:
     depends_on:
       config-server:
         condition: service_healthy
-      elastic-query-service-2:
+      elastic-query-service-reactive:
         condition: service_started
 
   kafka-streams-service:
