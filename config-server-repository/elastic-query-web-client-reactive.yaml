@@ -6,7 +6,7 @@ elastic-query-web-client:
     max-in-memory-size: 10485760 # 10 MB
     content-type: "application/json"
     accept-type: "text/event-stream"
-    base-url: "http://localhost:8183/elastic-query-service-reactive/documents"
+    base-url: "http://elastic-query-service-reactive:8183/elastic-query-service-reactive/documents"
   query-by-text:
     method: POST
     uri: "/by-text"

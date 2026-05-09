@@ -207,6 +207,8 @@ services:
     depends_on:
       config-server:
         condition: service_healthy
+      elastic-query-service-2:
+        condition: service_started
 
   kafka-streams-service:
     image: ${GROUP_ID}/kafka.streams.service:${SERVICE_VERSION:-latest}
