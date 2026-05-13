@@ -4,12 +4,12 @@
 [Event-Driven Microservices: Spring Boot, Kafka and Elastic](https://www.udemy.com/course/event-driven-microservices-spring-boot-kafka-and-elasticsearch/)
 на платформе Udemy.com.
 
-Курс посвящён созданию приложения, в котором будут взаимодействовать между собой несколько микросервисов 
+Курс посвящён созданию приложения, в котором будут взаимодействовать между собой несколько микросервисов
 под управлением Spring Cloud, с использованием паттернов Event Sourcing и Event Driven.
 
 ![схема приложения](pictures/app-structure.jpg)
 
-С большинством технологий, которые будут применяться в проекте, я так или иначе знакома. Новыми для меня станут 
+С большинством технологий, которые будут применяться в проекте, я так или иначе знакома. Новыми для меня станут
 Keycloak, Kafka Streams, ELK-stack.
 
 ## technologies
@@ -42,6 +42,7 @@ Keycloak, Kafka Streams, ELK-stack.
 ```bash
 mvn clean install -DskipTests
 ```
+
 </details>
 
 <details>
@@ -55,13 +56,15 @@ docker-compose up -d
 Список запущенных сервисов:
 | Сервис | Порт | Назначение |
 |:-------|:----:|:-----------|
-| config-server | 5007,<br/>8888 | Общий сервер конфигураций |
+| config-server | 5007,,&nbsp;8888 | Общий сервер конфигураций |
 | twitter-to-kafka-service | 5005 | Получение/генерация потока твитов и передача их в Kafka |
 | kafka-to-elastic-service | 5006 | Получение твитов из Kafka, их индексация и передача в Elasticsearch |
-| elastic-query-services | 5008,&nbsp;8183,<br/>5009, 8185 | Предоставление доступа к твитам через REST-запросы |
-| elastic-query-web-client | 5010,<br/>8184 | Предоставление доступа к твитам через UI-интерфейс |
-| kafka-streams-service | 5012,<br/>8187 | Получение твитов из Kafka, подсчёт частотности слов,<br/>передача результата в Kafka |
-| analytics-service | 5013,<br/>8188 | Получение из Kafka результатов подсчёта слов,<br/>сохранение их в PostgreSQL |
+| elastic-query-service<br/>(2 instances) | 5008,&nbsp;8183<br/>5009, 8185 | Предоставление доступа к твитам через REST-запросы<br/>(блокирующая версия) |
+| elastic-query-web-client | 5010,,&nbsp;8184 | Предоставление доступа к твитам через UI-интерфейс<br/>(блокирующая версия) |
+| elastic-query-service-reactive | 5014,&nbsp;8190 | Предоставление доступа к твитам через REST-запросы<br/>(реактивная версия) |
+| elastic-query-web-client-reactive | 5011,,&nbsp;8189 | Предоставление доступа к твитам через UI-интерфейс<br/>(реактивная версия) |
+| kafka-streams-service | 5012,,&nbsp;8187 | Получение твитов из Kafka, подсчёт частотности слов,<br/>передача результата в Kafka |
+| analytics-service | 5013,,&nbsp;8188 | Получение из Kafka результатов подсчёта слов,<br/>сохранение их в PostgreSQL |
 
 Список запущенной инфраструктуры:
 | Сервис | Порт | Назначение |
@@ -78,18 +81,18 @@ docker-compose up -d
 Микросервис предназначен для получения потока твитов из социальной сети X (ex-Twitter) по заданным ключевым
 словам. Работает как kafka-producer, отправляет полученные/сгенерированные твиты в топик `twitter-topic`.
 
-Поработать с настоящим потоком твитов мне так и не удалось. Я зарегистрировала аккаунт разработчика в 
-X, но, как оказалось, с 2023 года на бесплатном аккаунте получение стриммингового потока 
-недоступно. Ни с помощью библиотеки `twitter4j-stream`, ни с помощью класса `TwitterV2StreamHelper`, 
-написанного мною по аналогии с репозиторием `Twitter V2 API` от самих разработчиков Twitter :angry: 
-Единственное, что мне удалось получить, это десяток твитов через одноразовый REST-запрос в Postman. 
+Поработать с настоящим потоком твитов мне так и не удалось. Я зарегистрировала аккаунт разработчика в
+X, но, как оказалось, с 2023 года на бесплатном аккаунте получение стриммингового потока
+недоступно. Ни с помощью библиотеки `twitter4j-stream`, ни с помощью класса `TwitterV2StreamHelper`,
+написанного мною по аналогии с репозиторием `Twitter V2 API` от самих разработчиков Twitter :angry:
+Единственное, что мне удалось получить, это десяток твитов через одноразовый REST-запрос в Postman.
 Минимальный базовый тарифный план, на котором доступен стримминговый поток твитов, стоит 175-200$/месяц.
 
 Тем не менее, классы и конфигурации я сохранила:
 
-- класс `TwitterKafkaStreamRunner` работает на основе библиотеки `twitter4j-stream`. Для организации 
-стримминга твитов следует поместить в папку resources конфигурационный файл `twitter4j.properties`. 
-Ключи и токены нужно сгенерировать в аккаунте разработчика. Пример файла:
+- класс `TwitterKafkaStreamRunner` работает на основе библиотеки `twitter4j-stream`. Для организации
+  стримминга твитов следует поместить в папку resources конфигурационный файл `twitter4j.properties`.
+  Ключи и токены нужно сгенерировать в аккаунте разработчика. Пример файла:
 
 ```properties
 debug=true
@@ -100,11 +103,11 @@ oauth.accessTokenSecret=******************************************
 ```
 
 - класс `TwitterV2KafkaStreamRunner` работает на основе класса `TwitterV2StreamHelper`. В этом случае
-для организации стримминга твитов не нужен отдельный файл конфигурации, достаточно настроек в
-`application.yaml`. Но потребуется BearerToken, который также генерируется в аккаунте разработчика.
+  для организации стримминга твитов не нужен отдельный файл конфигурации, достаточно настроек в
+  `application.yaml`. Но потребуется BearerToken, который также генерируется в аккаунте разработчика.
 
-- класс `MockKafkaStreamRunner` генерирует поток псевдотвитов, собираемых из набора слов с добавлением 
-одного случайно выбранного ключевого слова.
+- класс `MockKafkaStreamRunner` генерирует поток псевдотвитов, собираемых из набора слов с добавлением
+  одного случайно выбранного ключевого слова.
 
 ## kafka-to-elastic-service
 
@@ -114,46 +117,82 @@ oauth.accessTokenSecret=******************************************
 ## elastic-query-services & elastic-query-web-clients
 
 Серверные микросервисы предоставляют доступ к содержимому индекса `twitter-index` по запросу:
+
 - модуль `elastic-query-service` реализован с использованием традиционного (блокирующего) подхода.  
-Базовый URL: `http://localhost:8183/elastic-query-service`.
+  Базовый URL: `http://localhost:8183/elastic-query-service`.
 - модуль `elastic-query-service-reactive` реализован в реактивном (неблокирующем) стиле.  
-Базовый URL: `http://localhost:8183/elastic-query-service-reactive`.
+  Базовый URL: `http://localhost:8190/elastic-query-service-reactive`.
 
-| Функция                                 | Описание                                                                      |               Блокирующая версия               |        Реактивная версия        |
-|:----------------------------------------|:------------------------------------------------------------------------------|:----------------------------------------------:|:-------------------------------:|
-| Авторизация                             | Доступ к API                                                                  | :key:&nbsp;`test` <br/> :lock:&nbsp;`test1234` | :unlock:&nbsp;Не&nbsp;требуется |
-| GET `/documents`                        | Получение всех твитов                                                         |               :white_check_mark:               |               :x:               |
-| GET `/documents/{id}`                   | Получение твита по id                                                         |               :white_check_mark:               |               :x:               |
-| POST&nbsp;`/documents/by‑text`          | Поиск твитов по тексту. <br/> Пример запроса JSON: <br/> `{ "text": "java" }` |               :white_check_mark:               |       :white_check_mark:        |
-| Swagger&nbsp;UI&nbsp;`/swagger‑ui.html` | Интерактивная документация                                                    |               :white_check_mark:               |               :x:               |
- 
+| Функция                                 | Описание                                                                      |       Блокирующая версия        |        Реактивная версия        |
+|:----------------------------------------|:------------------------------------------------------------------------------|:-------------------------------:|:-------------------------------:|
+| Авторизация                             | Доступ к API                                                                  | :lock:&nbsp;Keycloak&nbsp;(JWT) | :unlock:&nbsp;Не&nbsp;требуется |
+| GET `/documents`                        | Получение всех твитов                                                         |       :white_check_mark:        |               :x:               |
+| GET `/documents/{id}`                   | Получение твита по id                                                         |       :white_check_mark:        |               :x:               |
+| POST&nbsp;`/documents/by‑text`          | Поиск твитов по тексту. <br/> Пример запроса JSON: <br/> `{ "text": "java" }` |       :white_check_mark:        |       :white_check_mark:        |
+| Swagger&nbsp;UI&nbsp;`/swagger‑ui.html` | Интерактивная документация                                                    |       :white_check_mark:        |               :x:               |
+
 Клиентские микросервисы предоставляют минималистичный UI-интерфейс для поиска твитов по тексту:
-- модуль `elastic-query-web-client` - блокирующий, Spring MVC.  
-Базовый URL: `http://localhost:8184/elastic-query-web-client`.
-- модуль `elastic-query-web-client-reactive` - реактивный, Spring WebFlux.  
-Базовый URL: `http://localhost:8184/elastic-query-web-client-reactive`.
 
-| Страница             | Описание                                   |               Блокирующая версия               |   Реактивная версия   |
-|:---------------------|:-------------------------------------------|:----------------------------------------------:|:---------------------:|
-| `/home`              | Авторизация и/или вход на главную страницу | :key:&nbsp;`test` <br/> :lock:&nbsp;`test1234` | :unlock: Не требуется |
-| `/documents/by‑text` | Поиск твитов по тексту                     |               :white_check_mark:               |  :white_check_mark:   |
-| `/error`             | Обработка ошибок                           |               :white_check_mark:               |  :white_check_mark:   |                                                                              
+- модуль `elastic-query-web-client` - блокирующий, Spring MVC.  
+  Базовый URL: `http://localhost:8184/elastic-query-web-client`.
+- модуль `elastic-query-web-client-reactive` - реактивный, Spring WebFlux.  
+  Базовый URL: `http://localhost:8189/elastic-query-web-client-reactive`.
+
+| Страница             | Описание                                   |        Блокирующая версия         |   Реактивная версия   |
+|:---------------------|:-------------------------------------------|:---------------------------------:|:---------------------:|
+| `/home`              | Авторизация и/или вход на главную страницу |  :lock:&nbsp;Keycloak&nbsp;(JWT)  | :unlock: Не требуется |
+| `/documents/by‑text` | Поиск твитов по тексту                     |        :white_check_mark:         |  :white_check_mark:   |
+| `/error`             | Обработка ошибок                           |        :white_check_mark:         |  :white_check_mark:   |                                                                              
+
+В качестве механизма аутентификации используется Keycloak (OAuth2 Resource Server). Для проверки
+работоспособности можно использовать учётные записи, заранее добавленные в реалм `twitter-service-realm`:
+
+| Пользователь                        | Пароль                | Доступ        |
+|:------------------------------------|:----------------------|:--------------|
+| :bust_in_silhouette: app_user       | :key: user-pass123    | Базовый       |
+| :bust_in_silhouette: app_super_user | :key: super-secure456 | Расширенный   |
+| :bust_in_silhouette: app_admin      | :key: admin-master789 | Администратор |
+
+Пример получения JWT-токена в Keycloak для выполнения REST-запросов:
+
+```bash
+curl -X POST "http://localhost:8080/realms/twitter-service-realm/protocol/openid-connect/token" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=password" \
+  -d "client_id=elastic-query-service" \
+  -d "client_secret=0KvJQVvwKidvs6f5jFGSGkRmz7/QpLnRx2t1wzX5ubg=" \
+  -d "username=app_super_user" \
+  -d "password=super-secure456"
+```
+
+Из ответа необходимо взять поле `access token` и передать его в заголовке:
+
+```bash
+curl -X POST "http://localhost:8183/elastic-query-service/documents/by-text" \
+  -H "Authorization: Bearer <access_token>" \
+  -H "Content-Type: application/json" \
+  -d '{"text": "java"}'
+```
+
+Для входа в UI-интерфейс нужно открыть его в браузере и нажать кнопку <b>Login</b>, затем ввести логин
+и пароль одной из учётных записей на странице авторизации Keycloak.
 
 Видео (.gif) работы UI выложу позже, когда проект будет закончен.
 
 ## kafka-streams-service
 
-Микросервис предназначен для потоковой обработки твитов. Работает как Kafka Streams приложение. Параллельно 
+Микросервис предназначен для потоковой обработки твитов. Работает как Kafka Streams приложение. Параллельно
 с `kafka-to-elastic-service` принимает твиты из топика `twitter-topic`, подсчитывает частоту встречаемости
-слов и передаёт результат в топик `twitter-analytics-topic`. 
+слов и передаёт результат в топик `twitter-analytics-topic`.
 
 ## analytics-service
 
 Микросервис получает результаты подсчёта слов из топика `twitter-analytics-topic`, трансформирует Avro-модели
-в JPA-сущности и сохраняет в базу данных PostgreSQL. Работает как kafka-consumer. Для каждого слова 
-сохраняется его последнее количество вхождений и дата записи. 
+в JPA-сущности и сохраняет в базу данных PostgreSQL. Работает как kafka-consumer. Для каждого слова
+сохраняется его последнее количество вхождений и дата записи.
 
-Полученные данные используются на странице поиска твитов по тексту<br/>`http://localhost:8184/elastic-query-web-client/documents/by‑text`:
+Полученные данные используются в блокирующей версии приложения на странице поиска твитов по
+тексту<br/>`http://localhost:8184/elastic-query-web-client/documents/by‑text`:
 <br/>над списком результатов выводится отдельная строка с общим количеством вхождений этого слова.
 
 ## config-server
@@ -164,11 +203,12 @@ oauth.accessTokenSecret=******************************************
 
 Но на моём бесплатном аккаунте на GitHub единственный доступный приватный репозиторий уже занят -
 как раз-таки репозиторием с конфигурациями `spring-cloud-config-server` для другого проекта на`Spring Cloud`
-:slightly_smiling_face:	Поэтому в качестве репозитория я использую директорию (не модуль!)
+:slightly_smiling_face:    Поэтому в качестве репозитория я использую директорию (не модуль!)
 `config-server-repository`.
 
 Чтобы сделать из директории git-репозиторий, нужно перейти внутрь этой директории в терминале и выполнить
 следующие команды:
+
 ```bash
 git init
 git status
@@ -176,8 +216,10 @@ git commit -am "Initial commit"
 git branch -M main
 git update-ref refs/remotes/origin/main refs/heads/main
 ```
+
 Если впоследствии вносятся какие-либо изменения внутри git-репозитория, то для их применения нужно выполнить
 в терминале команды:
+
 ```bash
 git add .
 git commit -m "Add new configs"
