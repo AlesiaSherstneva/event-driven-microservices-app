@@ -1,0 +1,133 @@
+services:
+  twitter-to-kafka-service:
+    # profiles: ["disabled"]
+    image: ${GROUP_ID}/twitter.to.kafka.service:${SERVICE_VERSION:-latest}
+    ports:
+      - "5005:5005"
+    volumes:
+      - "./docker-logs:/workspace/twitter-to-kafka-service/logs"
+    environment:
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Xms128m -Xmx256m"
+      - "LOGGING_LEVEL_COM_MICROSERVICES=info"
+      - "LOGGING_LEVEL_ROOT=info"
+      - "KAFKA-CONFIG_TOPIC-NAME=twitter-topic"
+      - "KAFKA-CONFIG_TOPIC-NAMES-TO-CREATE_0=twitter-topic"
+      - "KAFKA-CONFIG_TOPIC-NAMES-TO-CREATE_1=twitter-analytics-topic"
+      - "KAFKA-CONFIG_BOOTSTRAP-SERVERS=kafka-broker-1:9192, kafka-broker-2:9192, kafka-broker-3:9192"
+      - "KAFKA-CONFIG_SCHEMA-REGISTRY-URL=http://schema-registry:8081"
+      - "TWITTER_TO_KAFKA_SERVICE-ENABLE_MOCK_TWEETS=true"
+      - "CONFIG_SERVER_HOST=http://config-server:8888"
+      - "ENCRYPT_KEY=${ENCRYPT_KEY}"
+    networks:
+      - ${GLOBAL_NETWORK:-services}
+    depends_on:
+      config-server:
+        condition: service_healthy
+      kafka-1:
+        condition: service_started
+      kafka-2:
+        condition: service_started
+      kafka-3:
+        condition: service_started
+
+  kafka-to-elastic-service:
+    # profiles: ["disabled"]
+    image: ${GROUP_ID}/kafka.to.elastic.service:${SERVICE_VERSION:-latest}
+    ports:
+      - "5006:5006"
+    volumes:
+      - "./docker-logs:/workspace/kafka-to-elastic-service/logs"
+    environment:
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006 -Xms128m -Xmx256m"
+      - "LOGGING_LEVEL_COM_MICROSERVICES=info"
+      - "KAFKA-CONFIG_TOPIC-NAME=twitter-topic"
+      - "KAFKA-CONFIG_BOOTSTRAP-SERVERS=kafka-broker-1:9192, kafka-broker-2:9192, kafka-broker-3:9192"
+      - "KAFKA-CONFIG_SCHEMA-REGISTRY-URL=http://schema-registry:8081"
+      - "CONFIG_SERVER_HOST=http://config-server:8888"
+      - "ELASTIC-CONFIG_INDEX-NAME=twitter-index"
+      - "ELASTIC-CONFIG_CONNECTION-URL=http://elastic:9200"
+      - "ENCRYPT_KEY=${ENCRYPT_KEY}"
+    networks:
+      - ${GLOBAL_NETWORK:-services}
+    depends_on:
+      config-server:
+        condition: service_healthy
+      twitter-to-kafka-service:
+        condition: service_started
+      kafka-1:
+        condition: service_started
+      kafka-2:
+        condition: service_started
+      kafka-3:
+        condition: service_started
+      elastic:
+        condition: service_healthy
+
+  kafka-streams-service:
+    image: ${GROUP_ID}/kafka.streams.service:${SERVICE_VERSION:-latest}
+    ports:
+      - "5012:5012"
+      - "8187:8187"
+    volumes:
+      - "./docker-logs:/workspace/kafka-streams-service/logs"
+    environment:
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5012 -Xms128m -Xmx256m"
+      - "LOGGING_LEVEL_COM_MICROSERVICES=debug"
+      - "LOGGING_LEVEL_ROOT=debug"
+      - "SERVER_PORT=8187"
+      - "SERVER_SERVLET_CONTEXT-PATH=/kafka-streams-service"
+      - "KAFKA-CONFIG_BOOTSTRAP-SERVERS=kafka-broker-1:9192, kafka-broker-2:9192, kafka-broker-3:9192"
+      - "KAFKA-CONFIG_SCHEMA-REGISTRY-URL=http://schema-registry:8081"
+      - "CONFIG_SERVER_HOST=http://config-server:8888"
+      - "KEYCLOAK_HOST=keycloak-authorization-server"
+      - "KEYCLOAK_PORT=8080"
+      - "ENCRYPT_KEY=${ENCRYPT_KEY}"
+    networks:
+      - ${GLOBAL_NETWORK:-services}
+    depends_on:
+      config-server:
+        condition: service_healthy
+      kafka-1:
+        condition: service_started
+      kafka-2:
+        condition: service_started
+      kafka-3:
+        condition: service_started
+      keycloak-authorization-server:
+        condition: service_healthy
+
+  analytics-service:
+    image: ${GROUP_ID}/analytics.service:${SERVICE_VERSION:-latest}
+    ports:
+      - "5013:5013"
+      - "8188:8188"
+    volumes:
+      - "./docker-logs:/workspace/analytics-service/logs"
+    environment:
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5013 -Xms128m -Xmx256m"
+      - "LOGGING_LEVEL_COM_MICROSERVICES=info"
+      - "LOGGING_LEVEL_ROOT=info"
+      - "LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_JDBC_DATASOURCE_INIT=debug"
+      - "SERVER_PORT=8188"
+      - "SERVER_SERVLET_CONTEXT-PATH=/analytics-service"
+      - "KAFKA-CONFIG_BOOTSTRAP-SERVERS=kafka-broker-1:9192, kafka-broker-2:9192, kafka-broker-3:9192"
+      - "KAFKA-CONFIG_SCHEMA-REGISTRY-URL=http://schema-registry:8081"
+      - "CONFIG_SERVER_HOST=http://config-server:8888"
+      - "KEYCLOAK_HOST=keycloak-authorization-server"
+      - "KEYCLOAK_PORT=8080"
+      - "DB_HOST=postgres"
+      - "DB_PORT=5432"
+      - "ENCRYPT_KEY=${ENCRYPT_KEY}"
+    networks:
+      - ${GLOBAL_NETWORK:-services}
+    depends_on:
+      config-server:
+        condition: service_healthy
+      kafka-1:
+        condition: service_started
+      kafka-2:
+        condition: service_started
+      kafka-3:
+        condition: service_started
+      keycloak-authorization-server:
+        condition: service_healthy

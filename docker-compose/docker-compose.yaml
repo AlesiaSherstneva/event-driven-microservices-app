@@ -2,7 +2,9 @@ name: twitter-kafka-elastic-service
 
 include:
   - ./infrastructure.yaml
-  - ./services.yaml
+  - ./system.yaml
+  - ./kafka-pipeline.yaml
+  - ./elastic-query.yaml
 
 networks:
   application:

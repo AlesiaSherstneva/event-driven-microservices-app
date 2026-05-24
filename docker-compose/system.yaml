@@ -1,0 +1,21 @@
+services:
+  config-server:
+    image: ${GROUP_ID}/config.server:${SERVICE_VERSION:-latest}
+    ports:
+      - "5007:5007"
+      - "8888:8888"
+    volumes:
+      - "./docker-logs:/workspace/config-server/logs"
+      - "../config-server-repository:/config-server-repository"
+    environment:
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5007 -Xms128m -Xmx256m"
+      - "ENCRYPT_KEY=${ENCRYPT_KEY}"
+      - "SPRING_PROFILES_ACTIVE=native"
+      - "SPRING_CLOUD_CONFIG_SERVER_NATIVE_SEARCH_LOCATIONS=file:///config-server-repository"
+    networks:
+      - ${GLOBAL_NETWORK:-services}
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8888/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
