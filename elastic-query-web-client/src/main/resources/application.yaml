@@ -11,7 +11,7 @@ config-server-host: http://localhost:8888
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://discovery-service-1:8761/eureka/,http://discovery-service-2:8762/eureka
+      defaultZone: http://discovery-service-1:8761/eureka/,http://discovery-service-2:8762/eureka/
 
 logging:
   config: "classpath:log4j2-common.xml"
