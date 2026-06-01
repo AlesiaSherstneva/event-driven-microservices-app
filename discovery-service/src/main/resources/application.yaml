@@ -28,7 +28,7 @@ eureka:
       instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
   client:
     serviceUrl:
-      defaultZone: http://discovery-service-1:8761/eureka/,http://discovery-service-2:8762/eureka
+      defaultZone: http://discovery-service-2:8762/eureka/
 
 ---
 server:
@@ -44,4 +44,4 @@ eureka:
       instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
   client:
     serviceUrl:
-      defaultZone: http://discovery-service-2:8762/eureka,http://discovery-service-1:8761/eureka/
+      defaultZone: http://discovery-service-1:8761/eureka/

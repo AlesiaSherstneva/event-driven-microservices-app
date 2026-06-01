@@ -30,10 +30,13 @@ services:
     environment:
       - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5015 -Xms128m -Xmx256m"
       - "LOGGING_LEVEL_ROOT=info"
+      - "LOGGING_LEVEL_COM_NETFLIX_EUREKA=debug"
+      - "LOGGING_LEVEL_COM_NETFLIX_DISCOVERY=debug"
+      - "LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_CLOUD_NETFLIX_EUREKA=debug"
       - "SERVER_PORT=8761"
-      - "SPRING_CONFIG_ACTIVATE_ON-PROFILE=peer1"
+      - "SPRING_PROFILES_ACTIVE=peer1"
       - "EUREKA_INSTANCE_HOSTNAME=discovery-service-1"
-      - "EUREKA_CLIENT_SERVICE-URL_DEFAULT-ZONE=http://discovery-service-1:8761/eureka/,http://discovery-service-2:8762/eureka"
+      - "EUREKA_CLIENT_SERVICE-URL_DEFAULT-ZONE=http://discovery-service-2:8762/eureka"
     networks:
       - ${GLOBAL_NETWORK:-services}
 
@@ -47,9 +50,12 @@ services:
     environment:
       - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5016 -Xms128m -Xmx256m"
       - "LOGGING_LEVEL_ROOT=info"
+      - "LOGGING_LEVEL_COM_NETFLIX_EUREKA=debug"
+      - "LOGGING_LEVEL_COM_NETFLIX_DISCOVERY=debug"
+      - "LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_CLOUD_NETFLIX_EUREKA=debug"
       - "SERVER_PORT=8762"
-      - "SPRING_CONFIG_ACTIVATE_ON-PROFILE=peer2"
+      - "SPRING_PROFILES_ACTIVE=peer2"
       - "EUREKA_INSTANCE_HOSTNAME=discovery-service-2"
-      - "EUREKA_CLIENT_SERVICE-URL_DEFAULT-ZONE=http://discovery-service-2:8762/eureka,http://discovery-service-1:8761/eureka/"
+      - "EUREKA_CLIENT_SERVICE-URL_DEFAULT-ZONE=http://discovery-service-1:8761/eureka/"
     networks:
       - ${GLOBAL_NETWORK:-services}
