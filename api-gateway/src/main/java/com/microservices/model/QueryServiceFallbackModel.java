@@ -1,0 +1,14 @@
+package com.microservices.model;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class QueryServiceFallbackModel {
+    private String fallbackMessage;
+}
