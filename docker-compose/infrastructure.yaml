@@ -181,6 +181,27 @@ services:
       config-server:
         condition: service_healthy
 
+  # Redis cluster
+  redis-master:
+    image: redis:${REDIS_VERSION:-latest}
+    hostname: redis
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    networks:
+      - ${GLOBAL_NETWORK:-services}
+
+  redis-slave:
+    image: redis:${REDIS_VERSION:-latest}
+    command: ["redis-server", "--slaveof", "redis-master", "6379"]
+    ports:
+      - "6380:6379"
+    networks:
+      - ${GLOBAL_NETWORK:-services}
+    depends_on:
+      redis-master:
+        condition: service_healthy
+
 networks:
   application:
     driver: bridge
