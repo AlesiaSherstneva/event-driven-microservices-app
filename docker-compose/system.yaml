@@ -59,3 +59,14 @@ services:
       - "EUREKA_CLIENT_SERVICE-URL_DEFAULT-ZONE=http://discovery-service-1:8761/eureka/"
     networks:
       - ${GLOBAL_NETWORK:-services}
+
+  api-gateway:
+    image: ${GROUP_ID}/api.gateway:${SERVICE_VERSION:-latest}
+    ports:
+      - "5017:5017"
+      - "9090:9090"
+    volumes:
+      - "./docker-logs:/workspace/api-gateway/logs"
+    links:
+      - "redis-master:redis"
+    environment:
