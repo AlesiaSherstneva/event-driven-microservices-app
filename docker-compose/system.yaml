@@ -78,3 +78,6 @@ services:
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
     networks:
       - ${GLOBAL_NETWORK:-services}
+    depends_on:
+      config-server:
+        condition: service_healthy

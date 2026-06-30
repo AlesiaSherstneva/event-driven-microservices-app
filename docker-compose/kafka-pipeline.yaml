@@ -72,8 +72,8 @@ services:
       - "./docker-logs:/workspace/kafka-streams-service/logs"
     environment:
       - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5012 -Xms128m -Xmx256m"
-      - "LOGGING_LEVEL_COM_MICROSERVICES=debug"
-      - "LOGGING_LEVEL_ROOT=debug"
+      - "LOGGING_LEVEL_COM_MICROSERVICES=info"
+      - "LOGGING_LEVEL_ROOT=info"
       - "SERVER_PORT=8187"
       - "SERVER_SERVLET_CONTEXT-PATH=/kafka-streams-service"
       - "KAFKA-CONFIG_BOOTSTRAP-SERVERS=kafka-broker-1:9192, kafka-broker-2:9192, kafka-broker-3:9192"

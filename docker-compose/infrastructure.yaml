@@ -14,6 +14,7 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_LOG_DIRS: '/tmp/kraft-combined-logs'
+      KAFKA_HEAP_OPTS: -Xmx256m -Xms256m
     ports:
       - 9091:9091
     volumes:
@@ -35,6 +36,7 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_LOG_DIRS: '/tmp/kraft-combined-logs'
+      KAFKA_HEAP_OPTS: -Xmx256m -Xms256m
     ports:
       - 9092:9092
     volumes:
@@ -56,6 +58,7 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_LOG_DIRS: '/tmp/kraft-combined-logs'
+      KAFKA_HEAP_OPTS: -Xmx256m -Xms256m
     ports:
       - 9093:9093
     volumes:
@@ -97,7 +100,7 @@ services:
       discovery.type: single-node
       bootstrap.memory_lock: true
       xpack.security.enabled: false
-      ES_JAVA_OPTS: -Xms1g -Xmx1g
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
       cluster.routing.allocation.disk.watermark.low: 90%
       cluster.routing.allocation.disk.watermark.high: 95%
       cluster.routing.allocation.disk.watermark.flood_stage: 97%
@@ -163,6 +166,7 @@ services:
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
       KC_HEALTH_ENABLED: true
+      JAVA_OPTS_APPEND: -Xms128m -Xmx512m
     entrypoint: ["/bin/sh", "-c"]
     command:
       - |
