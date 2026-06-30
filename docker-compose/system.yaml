@@ -70,3 +70,11 @@ services:
     links:
       - "redis-master:redis"
     environment:
+      - "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5017 -Xms128m -Xmx256m"
+      - "LOGGING_LEVEL_ROOT=debug"
+      - "SERVER_PORT=9090"
+      - "CONFIG_SERVER_HOST=http://config-server:8888"
+      - "SPRING_REDIS_HOST=redis"
+      - "ENCRYPT_KEY=${ENCRYPT_KEY}"
+    networks:
+      - ${GLOBAL_NETWORK:-services}
