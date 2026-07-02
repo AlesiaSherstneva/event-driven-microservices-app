@@ -2,6 +2,7 @@
   "id": "twitter-service-realm",
   "realm": "twitter-service-realm",
   "enabled": true,
+  "accessTokenLifespan": 1800,
   "roles": {
     "realm": [
       {
@@ -64,6 +65,9 @@
         "roles"
       ],
       "secret": "8y1aBQJO8/6Z7o9/uo937FHs2Y3CfrDf5Gl88xKSdUY=",
+      "attributes": {
+        "post.logout.redirect.uris": "http://localhost:8184/elastic-query-web-client"
+      },
       "protocolMappers": [
         {
           "name": "groups",

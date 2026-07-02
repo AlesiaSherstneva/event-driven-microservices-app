@@ -13,8 +13,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.List;
-
 @Controller
 @RequiredArgsConstructor
 public class QueryController {
@@ -49,7 +47,7 @@ public class QueryController {
         model.addAttribute("wordCount", responseModel.getWordCount());
         model.addAttribute("searchText", requestModel.getText());
         model.addAttribute("elasticQueryWebClientRequestModel",
-                ElasticQueryWebClientResponseModel.builder().build());
+                ElasticQueryWebClientRequestModel.builder().build());
 
         return "home";
     }
