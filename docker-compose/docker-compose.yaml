@@ -5,6 +5,7 @@ include:
   - ./system.yaml
   - ./kafka-pipeline.yaml
   - ./elastic-query.yaml
+  - ./observability.yaml
 
 networks:
   application:
