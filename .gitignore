@@ -17,3 +17,7 @@
 # Docker volumes
 /docker-compose/volumes/
 /docker-compose/docker-logs/
+
+# observability
+/docker-compose/prometheus
+/docker-compose/grafana
