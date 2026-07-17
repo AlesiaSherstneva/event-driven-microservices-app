@@ -1,7 +1,7 @@
 services:
   # Prometheus
   prometheus:
-    image: prom/prometheus:{PROMETHEUS_VERSION:-latest}
+    image: prom/prometheus:${PROMETHEUS_VERSION:-latest}
     hostname: prometheus
     ports:
       - "9090:9090"
