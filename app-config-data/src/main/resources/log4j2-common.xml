@@ -2,35 +2,44 @@
 <Configuration status="WARN">
     <Properties>
         <Property name="DEV_HOME">logs</Property>
-        <Property name="APP_NAME">app-config-data</Property>
+        <Property name="APP_NAME">${sys:spring.application.name:-app-config-data}</Property>
     </Properties>
 
     <Appenders>
         <Console name="STDOUT" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] %logger{36} - %msg%n"/>
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level [%X{correlationId}] %logger{36} - %msg%n"/>
         </Console>
 
         <RollingFile name="FILE"
                      fileName="${DEV_HOME}/${APP_NAME}.log"
                      filePattern="${DEV_HOME}/archived/${APP_NAME}-log.%d{yyyy-MM-dd}.%i.log">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"/>
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level [%X{correlationId}] %logger{36} - %msg%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
                 <SizeBasedTriggeringPolicy size="10 MB"/>
             </Policies>
             <DefaultRolloverStrategy max="10"/>
         </RollingFile>
+
+        <Socket name="LOGSTASH" host="localhost" port="5000" protocol="TCP">
+            <JsonLayout compact="true" eventEol="true" properties="true">
+                <KeyValuePair key="appName" value="${APP_NAME}"/>
+                <KeyValuePair key="instanceId" value="${env:HOSTNAME:-unknown}"/>
+            </JsonLayout>
+        </Socket>
     </Appenders>
 
     <Loggers>
         <Logger name="com.microservices" level="info" additivity="false">
             <AppenderRef ref="FILE"/>
             <AppenderRef ref="STDOUT"/>
+            <AppenderRef ref="LOGSTASH"/>
         </Logger>
 
         <Root level="info">
             <AppenderRef ref="FILE"/>
             <AppenderRef ref="STDOUT"/>
+            <AppenderRef ref="LOGSTASH"/>
         </Root>
     </Loggers>
 </Configuration>

@@ -4,6 +4,7 @@ import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.ThreadContext;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +14,7 @@ import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
 import org.springframework.security.oauth2.client.web.reactive.function.client.ServletOAuth2AuthorizedClientExchangeFilterFunction;
+import org.springframework.web.reactive.function.client.ClientRequest;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 
@@ -48,7 +50,18 @@ public class WebClientConfig {
                 .apply(oauth2.oauth2Configuration())
                 .codecs(clientCodecConfigurer -> clientCodecConfigurer
                         .defaultCodecs()
-                        .maxInMemorySize(webClientConfig.getMaxInMemorySize()));
+                        .maxInMemorySize(webClientConfig.getMaxInMemorySize()))
+                .filter((request, next) -> {
+                    String correlationId = ThreadContext.get("correlationId");
+
+                    if (correlationId != null && !correlationId.isBlank()) {
+                        return next.exchange(ClientRequest.from(request)
+                                .header("X-Correlation-ID", correlationId)
+                                .build());
+                    }
+
+                    return next.exchange(request);
+                });
     }
 
     private HttpClient getHttpClient() {
