@@ -92,7 +92,7 @@ services:
 
   # Elasticsearch cluster
   elastic:
-    image: elasticsearch:9.0.2
+    image: elasticsearch:${ELASTIC_VERSION}
     container_name: elastic
     environment:
       node.name: elastic-1
