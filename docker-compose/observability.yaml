@@ -25,3 +25,9 @@ services:
       - "GF_SECURITY_ADMIN_PASSWORD=admin"
     networks:
       - ${GLOBAL_NETWORK:-services}
+
+  # Logstash
+  logstash:
+    image: docker.elastic.co/logstash/logstash:${ELASTIC_VERSION}
+    command: logstash -f /etc/logstash/conf.d/log4j2.conf
+    ports:
