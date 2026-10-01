@@ -31,3 +31,8 @@ services:
     image: docker.elastic.co/logstash/logstash:${ELASTIC_VERSION}
     command: logstash -f /etc/logstash/conf.d/log4j2.conf
     ports:
+      - "9600:9600"
+      - "5000:5000"
+    volumes:
+      - ./config/log4j2.conf:/etc/logstash/conf.d/log4j2.conf
+      - ./docker-logs/logstash:/logs
