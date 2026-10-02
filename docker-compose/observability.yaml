@@ -36,3 +36,9 @@ services:
     volumes:
       - ./config/log4j2.conf:/etc/logstash/conf.d/log4j2.conf
       - ./docker-logs/logstash:/logs
+    environment:
+      LS_JAVA_OPTS: "-Xms256m -Xmx512m"
+      CLUSTER_NAME: es-twitter-cluster
+      XPACK_MONITORING_ELASTICSEARCH_HOSTS: http://elastic:9200
+    networks:
+      - ${GLOBAL_NETWORK:-services}
