@@ -15,6 +15,7 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_LOG_DIRS: '/tmp/kraft-combined-logs'
       KAFKA_HEAP_OPTS: -Xmx256m -Xms256m
+    mem_limit: 512m
     ports:
       - 9091:9091
     volumes:
@@ -37,6 +38,7 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_LOG_DIRS: '/tmp/kraft-combined-logs'
       KAFKA_HEAP_OPTS: -Xmx256m -Xms256m
+    mem_limit: 512m
     ports:
       - 9092:9092
     volumes:
@@ -59,6 +61,7 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_LOG_DIRS: '/tmp/kraft-combined-logs'
       KAFKA_HEAP_OPTS: -Xmx256m -Xms256m
+    mem_limit: 512m
     ports:
       - 9093:9093
     volumes:
@@ -70,20 +73,21 @@ services:
   schema-registry:
     image: confluentinc/cp-schema-registry:latest
     container_name: schema-registry
-    depends_on:
-      - kafka-1
-      - kafka-2
-      - kafka-3
-    ports:
-      - 8081:8081
     environment:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_LISTENERS: "http://0.0.0.0:8081"
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "kafka-1:9192,kafka-2:9192,kafka-3:9192"
       SCHEMA_REGISTRY_KAFKASTORE_SECURITY_PROTOCOL: "PLAINTEXT"
+    mem_limit: 384m
     restart: unless-stopped
+    ports:
+      - 8081:8081
     networks:
       - ${GLOBAL_NETWORK:-services}
+    depends_on:
+      - kafka-1
+      - kafka-2
+      - kafka-3
     healthcheck:
       test: [ "CMD", "kafka-topics.sh", "--bootstrap-server", "localhost:9192", "--list" ]
       interval: 10s
@@ -105,6 +109,7 @@ services:
       cluster.routing.allocation.disk.watermark.high: 95%
       cluster.routing.allocation.disk.watermark.flood_stage: 97%
       readiness.port: 9201
+    mem_limit: 1g
     ulimits:
       memlock:
         soft: -1
@@ -130,6 +135,7 @@ services:
       POSTGRES_DB: keycloak
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+    mem_limit: 256m
     ports:
       - 5433:5432
     volumes:
@@ -148,11 +154,6 @@ services:
     image: quay.io/keycloak/keycloak:${KEYCLOAK_VERSION:-latest}
     container_name: keycloak-authorization-server
     hostname: keycloak-server
-    ports:
-      - 8080:8080
-      - 9000:9000
-    volumes:
-      - ..\app-config-data\src\main\resources\realm-export.json:/opt/keycloak/data/import/realm-export.json
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
@@ -167,7 +168,13 @@ services:
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
       KC_HEALTH_ENABLED: true
       JAVA_OPTS_APPEND: -Xms128m -Xmx512m
-    entrypoint: ["/bin/sh", "-c"]
+    mem_limit: 768m
+    entrypoint: [ "/bin/sh", "-c" ]
+    ports:
+      - 8080:8080
+      - 9000:9000
+    volumes:
+      - ..\app-config-data\src\main\resources\realm-export.json:/opt/keycloak/data/import/realm-export.json
     command:
       - |
         /opt/keycloak/bin/kc.sh import --file /opt/keycloak/data/import/realm-export.json --override true
@@ -185,10 +192,11 @@ services:
       config-server:
         condition: service_healthy
 
-  # Redis cluster
-  redis-master:
+  # Redis
+  redis:
     image: redis:${REDIS_VERSION:-latest}
     hostname: redis
+    mem_limit: 128m
     command: ["redis-server", "--appendonly", "yes"]
     ports:
       - "6379:6379"
@@ -199,17 +207,6 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
-
-  redis-slave:
-    image: redis:${REDIS_VERSION:-latest}
-    command: ["redis-server", "--slaveof", "redis-master", "6379"]
-    ports:
-      - "6380:6379"
-    networks:
-      - ${GLOBAL_NETWORK:-services}
-    depends_on:
-      redis-master:
-        condition: service_healthy
 
 networks:
   application:

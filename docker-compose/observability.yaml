@@ -8,6 +8,7 @@ services:
     volumes:
       - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
       - ./prometheus:/prometheus
+    mem_limit: 256m
     networks:
       - ${GLOBAL_NETWORK:-services}
 
@@ -23,23 +24,25 @@ services:
     environment:
       - "GF_SECURITY_ADMIN_USER=admin"
       - "GF_SECURITY_ADMIN_PASSWORD=admin"
+    mem_limit: 256m
     networks:
       - ${GLOBAL_NETWORK:-services}
 
   # Logstash
   logstash:
     image: docker.elastic.co/logstash/logstash:${ELASTIC_VERSION}
-    command: logstash -f /etc/logstash/conf.d/log4j2.conf
+    environment:
+      LS_JAVA_OPTS: "-Xms256m -Xmx512m"
+      CLUSTER_NAME: es-twitter-cluster
+      XPACK_MONITORING_ELASTICSEARCH_HOSTS: http://elastic:9200
+    mem_limit: 512m
     ports:
       - "9600:9600"
       - "5000:5000"
     volumes:
       - ./config/log4j2.conf:/etc/logstash/conf.d/log4j2.conf
       - ./docker-logs/logstash:/logs
-    environment:
-      LS_JAVA_OPTS: "-Xms256m -Xmx512m"
-      CLUSTER_NAME: es-twitter-cluster
-      XPACK_MONITORING_ELASTICSEARCH_HOSTS: http://elastic:9200
+    command: logstash -f /etc/logstash/conf.d/log4j2.conf
     networks:
       - ${GLOBAL_NETWORK:-services}
     depends_on:
@@ -53,6 +56,8 @@ services:
       - "5601:5601"
     environment:
       ELASTICSEARCH_HOSTS: http://elastic:9200
+      NODE_OPTIONS: "--max-old-space-size=512"
+    mem_limit: 768m
     networks:
       - ${GLOBAL_NETWORK:-services}
     depends_on:
