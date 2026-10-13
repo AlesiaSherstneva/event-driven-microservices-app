@@ -26,6 +26,7 @@ services:
       - "ANALYTICS_HOST=analytics-service"
       - "ANALYTICS_PORT=8188"
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
+    mem_limit: 350m
     networks:
       - ${GLOBAL_NETWORK:-services}
     depends_on:

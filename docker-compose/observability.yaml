@@ -47,7 +47,7 @@ services:
       - ${GLOBAL_NETWORK:-services}
     depends_on:
       elastic:
-        condition: service_started
+        condition: service_healthy
 
   # Kibana
   kibana:
@@ -62,4 +62,4 @@ services:
       - ${GLOBAL_NETWORK:-services}
     depends_on:
       elastic:
-        condition: service_started
+        condition: service_healthy
