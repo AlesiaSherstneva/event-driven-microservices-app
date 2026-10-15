@@ -1,7 +1,7 @@
 services:
   # Kafka cluster
   kafka-1:
-    image: apache/kafka:latest
+    image: apache/kafka:${KAFKA_VERSION}
     container_name: kafka-broker-1
     environment:
       CLUSTER_ID: r4zt_wrqTRuT7W2NJsB_GA
@@ -24,7 +24,7 @@ services:
       - ${GLOBAL_NETWORK:-services}
 
   kafka-2:
-    image: apache/kafka:latest
+    image: apache/kafka:${KAFKA_VERSION}
     container_name: kafka-broker-2
     environment:
       CLUSTER_ID: r4zt_wrqTRuT7W2NJsB_GA
@@ -47,7 +47,7 @@ services:
       - ${GLOBAL_NETWORK:-services}
 
   kafka-3:
-    image: apache/kafka:latest
+    image: apache/kafka:${KAFKA_VERSION}
     container_name: kafka-broker-3
     environment:
       CLUSTER_ID: r4zt_wrqTRuT7W2NJsB_GA
@@ -71,7 +71,7 @@ services:
 
   # Schema registry
   schema-registry:
-    image: confluentinc/cp-schema-registry:latest
+    image: confluentinc/cp-schema-registry:${SCHEMA_REGISTRY_VERSION}
     container_name: schema-registry
     environment:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
@@ -93,7 +93,7 @@ services:
       timeout: 5s
       retries: 10
 
-  # Elasticsearch cluster
+  # Elasticsearch DB
   elastic:
     image: elasticsearch:${ELASTIC_VERSION}
     container_name: elastic
@@ -126,9 +126,9 @@ services:
       retries: 12
       start_period: 60s
 
-  # Postgres DB for Keycloak
+  # Postgres DB
   postgres:
-    image: postgres:latest
+    image: postgres:${POSTGRES_VERSION}
     container_name: postgres
     environment:
       POSTGRES_DB: keycloak
@@ -150,7 +150,7 @@ services:
 
   # Keycloak authorization server
   keycloak-authorization-server:
-    image: quay.io/keycloak/keycloak:${KEYCLOAK_VERSION:-latest}
+    image: quay.io/keycloak/keycloak:${KEYCLOAK_VERSION}
     container_name: keycloak-authorization-server
     hostname: keycloak-server
     environment:
@@ -193,7 +193,7 @@ services:
 
   # Redis
   redis:
-    image: redis:${REDIS_VERSION:-latest}
+    image: redis:${REDIS_VERSION}
     hostname: redis
     mem_limit: 128m
     command: ["redis-server", "--appendonly", "yes"]

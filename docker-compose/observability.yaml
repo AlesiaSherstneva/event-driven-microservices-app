@@ -1,7 +1,7 @@
 services:
   # Prometheus
   prometheus:
-    image: prom/prometheus:${PROMETHEUS_VERSION:-latest}
+    image: prom/prometheus:${PROMETHEUS_VERSION}
     hostname: prometheus
     ports:
       - "9094:9090"
@@ -14,7 +14,7 @@ services:
 
   # Grafana
   grafana:
-    image: grafana/grafana:${GRAFANA_VERSION:-latest}
+    image: grafana/grafana:${GRAFANA_VERSION}
     hostname: grafana
     ports:
       - "3000:3000"
@@ -38,7 +38,7 @@ services:
     mem_limit: 512m
     ports:
       - "9600:9600"
-      - "5000:5000"
+      - "5001:5000"
     volumes:
       - ./config/log4j2.conf:/etc/logstash/conf.d/log4j2.conf
       - ./docker-logs/logstash:/logs
