@@ -127,6 +127,7 @@ services:
       - "ELASTIC-QUERY-WEB-CLIENT_WEB-CLIENT_INSTANCES_1_PORT=8185"
       - "KEYCLOAK_HOST=keycloak-authorization-server"
       - "KEYCLOAK_PORT=8080"
+      - "LOGSTASH_HOST=logstash"
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
     mem_limit: 350m
     networks:
