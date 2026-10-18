@@ -25,6 +25,7 @@ services:
       - "KAFKA_STREAMS_PORT=8187"
       - "ANALYTICS_HOST=analytics-service"
       - "ANALYTICS_PORT=8188"
+      - "LOGSTASH_HOST=logstash"
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
     mem_limit: 350m
     networks:
@@ -64,6 +65,7 @@ services:
       - "KAFKA_STREAMS_PORT=8187"
       - "ANALYTICS_HOST=analytics-service"
       - "ANALYTICS_PORT=8188"
+      - "LOGSTASH_HOST=logstash"
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
     mem_limit: 350m
     networks:
