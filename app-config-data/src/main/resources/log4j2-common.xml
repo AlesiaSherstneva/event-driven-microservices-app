@@ -21,12 +21,18 @@
             <DefaultRolloverStrategy max="10"/>
         </RollingFile>
 
-        <Socket name="LOGSTASH" host="${env:LOGSTASH_HOST:-localhost}" port="5000" protocol="TCP">
-            <JsonLayout compact="true" eventEol="true" properties="true">
-                <KeyValuePair key="appName" value="${APP_NAME}"/>
-                <KeyValuePair key="instanceId" value="${env:HOSTNAME:-unknown}"/>
-            </JsonLayout>
-        </Socket>
+        <Routing name="LOGSTASH_ROUTING">
+            <Routes pattern="$${env:LOGSTASH_ENABLED:-false}">
+                <Route key="true">
+                    <Socket name="LOGSTASH" host="${env:LOGSTASH_HOST:-localhost}" port="5000" protocol="TCP">
+                        <JsonLayout compact="true" eventEol="true" properties="true">
+                            <KeyValuePair key="appName" value="${APP_NAME}"/>
+                            <KeyValuePair key="instanceId" value="${env:HOSTNAME:-unknown}"/>
+                        </JsonLayout>
+                    </Socket>
+                </Route>
+            </Routes>
+        </Routing>
     </Appenders>
 
     <Loggers>
@@ -39,7 +45,7 @@
         <Root level="info">
             <AppenderRef ref="FILE"/>
             <AppenderRef ref="STDOUT"/>
-            <AppenderRef ref="LOGSTASH"/>
+            <AppenderRef ref="LOGSTASH_ROUTING"/>
         </Root>
     </Loggers>
 </Configuration>

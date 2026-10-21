@@ -46,3 +46,6 @@ user-config:
   username: test
   password: '{bcrypt}$2a$12$lONUZ9zZT/HeRCLYWTHl.eoIKi5VqRl2dR/xHxCaYCi2qsKzssBuy' # test1234
   roles: USER
+
+logstash:
+  enabled: true
