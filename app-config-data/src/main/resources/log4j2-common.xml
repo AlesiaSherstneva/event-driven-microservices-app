@@ -22,7 +22,7 @@
         </RollingFile>
 
         <Routing name="LOGSTASH_ROUTING">
-            <Routes pattern="$${env:LOGSTASH_ENABLED:-false}">
+            <Routes pattern="$${spring:logstash.enabled:-false}">
                 <Route key="true">
                     <Socket name="LOGSTASH" host="${env:LOGSTASH_HOST:-localhost}" port="5000" protocol="TCP">
                         <JsonLayout compact="true" eventEol="true" properties="true">
