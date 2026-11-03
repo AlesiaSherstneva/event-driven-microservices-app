@@ -17,6 +17,8 @@ services:
       - "KAFKA-CONFIG_SCHEMA-REGISTRY-URL=http://schema-registry:8081"
       - "TWITTER_TO_KAFKA_SERVICE-ENABLE_MOCK_TWEETS=true"
       - "CONFIG_SERVER_HOST=http://config-server:8888"
+      - "MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://zipkin:9411/api/v2/spans"
+      - "MANAGEMENT_TRACING_SAMPLING_PROBABILITY=1.0"
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
     mem_limit: 350m
     networks:
@@ -47,6 +49,8 @@ services:
       - "CONFIG_SERVER_HOST=http://config-server:8888"
       - "ELASTIC-CONFIG_INDEX-NAME=twitter-index"
       - "ELASTIC-CONFIG_CONNECTION-URL=http://elastic:9200"
+      - "SPRING_KAFKA_BOOTSTRAP-SERVERS=kafka-broker-1:9192, kafka-broker-2:9192, kafka-broker-3:9192"
+      - "MANAGEMENT_TRACING_SAMPLING_PROBABILITY=1.0"
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
     mem_limit: 350m
     networks:
@@ -84,6 +88,8 @@ services:
       - "KEYCLOAK_HOST=keycloak-authorization-server"
       - "KEYCLOAK_PORT=8080"
       - "LOGSTASH_HOST=logstash"
+      - "SPRING_KAFKA_BOOTSTRAP-SERVERS=kafka-broker-1:9192, kafka-broker-2:9192, kafka-broker-3:9192"
+      - "MANAGEMENT_TRACING_SAMPLING_PROBABILITY=1.0"
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
     mem_limit: 350m
     networks:
@@ -122,6 +128,8 @@ services:
       - "DB_HOST=postgres"
       - "DB_PORT=5432"
       - "LOGSTASH_HOST=logstash"
+      - "SPRING_KAFKA_BOOTSTRAP-SERVERS=kafka-broker-1:9192, kafka-broker-2:9192, kafka-broker-3:9192"
+      - "MANAGEMENT_TRACING_SAMPLING_PROBABILITY=1.0"
       - "ENCRYPT_KEY=${ENCRYPT_KEY}"
     mem_limit: 350m
     networks:

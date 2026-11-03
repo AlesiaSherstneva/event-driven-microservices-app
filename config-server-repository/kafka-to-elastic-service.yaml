@@ -1,6 +1,13 @@
 server:
   port: 8182
 
+spring:
+  kafka:
+    template:
+      observation-enabled: true
+    listener:
+      observation-enabled: true
+
 kafka-config:
   bootstrap-servers: localhost:9091, localhost:9092, localhost:9093
   schema-registry-url-key: schema.registry.url

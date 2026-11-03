@@ -66,7 +66,7 @@ services:
 
   # Zipkin
   zipkin:
-    image: openzipkin/zipkin:{ZIPKIN_VERSION}
+    image: openzipkin/zipkin:${ZIPKIN_VERSION}
     hostname: zipkin
     container_name: zipkin
     ports:
@@ -74,5 +74,6 @@ services:
     environment:
       - "JAVA_OPTS=-Xmx256m -Dlogging.level.zipkin2=DEBUG"
       - "KAFKA_BOOTSTRAP_SERVERS=kafka-broker-1:9192, kafka-broker-2:9192, kafka-broker-3:9192"
+    mem_limit: 300m
     networks:
       - ${GLOBAL_NETWORK:-services}

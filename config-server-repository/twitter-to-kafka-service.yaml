@@ -1,6 +1,13 @@
 server:
   port: 8181
 
+spring:
+  kafka:
+    template:
+      observation-enabled: true
+    listener:
+      observation-enabled: true
+
 twitter-to-kafka-service:
   twitter-keywords:
     - Java

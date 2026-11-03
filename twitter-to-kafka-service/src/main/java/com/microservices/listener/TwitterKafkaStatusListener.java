@@ -4,6 +4,8 @@ import com.microservices.avro.model.TwitterAvroModel;
 import com.microservices.config.KafkaConfigData;
 import com.microservices.service.KafkaProducer;
 import com.microservices.transformer.TwitterStatusToAvroTransformer;
+import io.micrometer.observation.Observation;
+import io.micrometer.observation.ObservationRegistry;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,15 +19,19 @@ public class TwitterKafkaStatusListener extends StatusAdapter {
     private final KafkaConfigData kafkaConfigData;
     private final KafkaProducer<Long, TwitterAvroModel> kafkaProducer;
     private final TwitterStatusToAvroTransformer transformer;
+    private final ObservationRegistry observationRegistry;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TwitterKafkaStatusListener.class);
 
     @Override
     public void onStatus(Status status) {
-        LOGGER.info("Received status text '{}' sending to kafka topic '{}'",
-                status.getText(), kafkaConfigData.getTopicName());
+        Observation.createNotStarted("twitter.status.received", observationRegistry)
+                .observe(() -> {
+                    LOGGER.info("Received status text '{}' sending to kafka topic '{}'",
+                            status.getText(), kafkaConfigData.getTopicName());
 
-        TwitterAvroModel avroModel = transformer.getTwitterAvroModelFromStatus(status);
-        kafkaProducer.send(kafkaConfigData.getTopicName(), avroModel.getUserId(), avroModel);
+                    TwitterAvroModel avroModel = transformer.getTwitterAvroModelFromStatus(status);
+                    kafkaProducer.send(kafkaConfigData.getTopicName(), avroModel.getUserId(), avroModel);
+                });
     }
 }

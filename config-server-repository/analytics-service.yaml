@@ -36,6 +36,11 @@ spring:
     init:
       mode: always
       schema-locations: classpath:schemas/init-schema.sql
+  kafka:
+    template:
+      observation-enabled: true
+    listener:
+      observation-enabled: true
 
 springdoc:
   api-docs:

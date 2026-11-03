@@ -69,6 +69,8 @@ spring:
   redis:
     host: 127.0.0.1
     port: 6379
+  reactor:
+    context-propagation: auto
 
 management:
   endpoints:

@@ -5,7 +5,9 @@ import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.ThreadContext;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.reactive.function.client.WebClientCustomizer;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,7 +34,8 @@ public class WebClientConfig {
     @LoadBalanced
     @Bean("webClientBuilder")
     WebClient.Builder webClientBuilder(ClientRegistrationRepository clientRegistrationRepository,
-                                       OAuth2AuthorizedClientRepository oAuth2AuthorizedClientRepository) {
+                                       OAuth2AuthorizedClientRepository oAuth2AuthorizedClientRepository,
+                                       ObjectProvider<WebClientCustomizer> customizerProvider) {
         ServletOAuth2AuthorizedClientExchangeFilterFunction oauth2 =
                 new ServletOAuth2AuthorizedClientExchangeFilterFunction(
                         clientRegistrationRepository, oAuth2AuthorizedClientRepository
@@ -40,7 +43,7 @@ public class WebClientConfig {
         oauth2.setDefaultOAuth2AuthorizedClient(true);
         oauth2.setDefaultClientRegistrationId(defaultClientRegistrationId);
 
-        return WebClient.builder()
+        WebClient.Builder webClientBuilder = WebClient.builder()
                 .baseUrl(webClientConfig.getBaseUrl())
                 .defaultHeaders(headers -> {
                     headers.setContentType(MediaType.valueOf(webClientConfig.getContentType()));
@@ -62,6 +65,9 @@ public class WebClientConfig {
 
                     return next.exchange(request);
                 });
+
+        customizerProvider.orderedStream().forEach(customizer -> customizer.customize(webClientBuilder));
+        return webClientBuilder;
     }
 
     private HttpClient getHttpClient() {

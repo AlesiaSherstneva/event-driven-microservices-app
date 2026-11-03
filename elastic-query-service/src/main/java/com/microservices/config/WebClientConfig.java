@@ -5,6 +5,8 @@ import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.ThreadContext;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.web.reactive.function.client.WebClientCustomizer;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,8 +26,8 @@ public class WebClientConfig {
 
     @Bean
     @LoadBalanced
-    WebClient.Builder webClientBuilder() {
-        return WebClient.builder()
+    WebClient.Builder webClientBuilder(ObjectProvider<WebClientCustomizer> customizerProvider) {
+        WebClient.Builder webClientBuilder = WebClient.builder()
                 .defaultHeaders(headers -> {
                     headers.setContentType(MediaType.valueOf(webClientConfig.getContentType()));
                     headers.setAccept(List.of(MediaType.valueOf(webClientConfig.getAcceptType())));
@@ -45,6 +47,9 @@ public class WebClientConfig {
 
                     return next.exchange(request);
                 });
+
+        customizerProvider.orderedStream().forEach(customizer -> customizer.customize(webClientBuilder));
+        return webClientBuilder;
     }
 
     private HttpClient getHttpClient() {
