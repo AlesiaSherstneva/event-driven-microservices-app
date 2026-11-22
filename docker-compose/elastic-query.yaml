@@ -83,6 +83,7 @@ services:
         condition: service_started
 
   elastic-query-service-reactive:
+    profiles: ["disabled"]
     image: ${GROUP_ID}/elastic.query.service.reactive:${SERVICE_VERSION:-latest}
     ports:
       - "5014:5014"
@@ -147,6 +148,7 @@ services:
         condition: service_healthy
 
   elastic-query-web-client-reactive:
+    profiles: ["disabled"]
     image: ${GROUP_ID}/elastic.query.web.client.reactive:${SERVICE_VERSION:-latest}
     ports:
       - "5011:5011"

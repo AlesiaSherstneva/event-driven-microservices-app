@@ -1,6 +1,5 @@
 services:
   twitter-to-kafka-service:
-    # profiles: ["disabled"]
     image: ${GROUP_ID}/twitter.to.kafka.service:${SERVICE_VERSION:-latest}
     ports:
       - "5005:5005"
@@ -34,7 +33,6 @@ services:
         condition: service_started
 
   kafka-to-elastic-service:
-    # profiles: ["disabled"]
     image: ${GROUP_ID}/kafka.to.elastic.service:${SERVICE_VERSION:-latest}
     ports:
       - "5006:5006"
