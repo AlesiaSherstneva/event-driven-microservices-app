@@ -4,7 +4,6 @@ import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.ThreadContext;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.web.reactive.function.client.WebClientCustomizer;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
@@ -12,7 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
-import org.springframework.web.reactive.function.client.ClientRequest;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 
@@ -35,18 +33,7 @@ public class WebClientConfig {
                 .clientConnector(new ReactorClientHttpConnector(getHttpClient()))
                 .codecs(clientCodecConfigurer -> clientCodecConfigurer
                         .defaultCodecs()
-                        .maxInMemorySize(webClientConfig.getMaxInMemorySize()))
-                .filter((request, next) -> {
-                    String correlationId = ThreadContext.get("correlationId");
-
-                    if (correlationId != null && !correlationId.isBlank()) {
-                        return next.exchange(ClientRequest.from(request)
-                                .header("X-Correlation-ID", correlationId)
-                                .build());
-                    }
-
-                    return next.exchange(request);
-                });
+                        .maxInMemorySize(webClientConfig.getMaxInMemorySize()));
 
         customizerProvider.orderedStream().forEach(customizer -> customizer.customize(webClientBuilder));
         return webClientBuilder;
