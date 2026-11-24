@@ -57,6 +57,7 @@ docker-compose up -d
 | Сервис | Порт | Назначение |
 |:-------|:----:|:-----------|
 | config-server | 5007,&nbsp;8888 | Общий сервер конфигураций |
+| discovery-service<br/>(2 instances, peer-to-peer) | 5015,&nbsp;8761<br/>5016,&nbsp;8762 | Реестр микросервисов для их динамической регистрации и обнаружения |
 | twitter-to-kafka-service | 5005 | Получение/генерация потока твитов и передача их в Kafka |
 | kafka-to-elastic-service | 5006 | Получение твитов из Kafka, их индексация и передача в Elasticsearch |
 | elastic-query-service<br/>(2 instances) | 5008,&nbsp;8183<br/>5009, 8185 | Предоставление доступа к твитам через REST-запросы<br/>(блокирующая версия) |
