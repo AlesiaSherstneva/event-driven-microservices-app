@@ -58,6 +58,7 @@ docker-compose up -d
 |:-------|:----:|:-----------|
 | config-server | 5007,&nbsp;8888 | Общий сервер конфигураций |
 | discovery-service<br/>(2 instances, peer-to-peer) | 5015,&nbsp;8761<br/>5016,&nbsp;8762 | Реестр микросервисов для их динамической регистрации и обнаружения |
+| api-gateway | 5017,&nbsp;9090 | Единая точка входа, маршрутизация, Circuit Breaker и Rate Limiting |
 | twitter-to-kafka-service | 5005 | Получение/генерация потока твитов и передача их в Kafka |
 | kafka-to-elastic-service | 5006 | Получение твитов из Kafka, их индексация и передача в Elasticsearch |
 | elastic-query-service<br/>(2 instances) | 5008,&nbsp;8183<br/>5009, 8185 | Предоставление доступа к твитам через REST-запросы<br/>(блокирующая версия) |
@@ -79,6 +80,8 @@ docker-compose up -d
 | Elasticsearch | 9200 | NoSQL база данных для поиска и аналитики |
 | Postgres | 5433 | База данных для Keycloak |
 | Keycloak | 8080 | Сервер аутентификации |
+| Redis | 6379 | NoSQL in-memory база данных для хранения счётчиков Rate Limiter |
+| Logstash | 5001,&nbsp;9600 | Сбор, парсинг и отправка логов в Elasticsearch |
 </details>
 
 ## twitter-to-kafka-service
