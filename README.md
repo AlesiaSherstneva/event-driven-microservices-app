@@ -30,6 +30,8 @@ Keycloak, Kafka Streams, ELK-stack.
 | Apache Httpclient | Apache Httpclient5 |
 | Apache Kafka + Zookeeper | Apache Kafka KRaft mode |
 | springdoc-openapi-ui | springdoc-openapi-starter-webmvc-ui |
+| logstash-logback-encoder<br/>(запись в файл, сбор через Filebeat) | JsonLayout + SocketAppender<br/>(прямая отправка логов по TCP) |
+| Sleuth | Micrometer Tracing |
 
 ## pre-requisites
 
@@ -80,8 +82,12 @@ docker-compose up -d
 | Elasticsearch | 9200 | NoSQL база данных для поиска и аналитики |
 | Postgres | 5433 | База данных для Keycloak |
 | Keycloak | 8080 | Сервер аутентификации |
-| Redis | 6379 | NoSQL in-memory база данных для хранения счётчиков Rate Limiter |
+| Redis | 6379 | NoSQL in-memory база данных для хранения счётчиков Rate Limiter из `api-gateway` |
 | Logstash | 5001,&nbsp;9600 | Сбор, парсинг и отправка логов в Elasticsearch |
+| Kibana | 5601 | Веб-интерфейс для централизованного просмотра и анализа логов |
+| Prometheus | 9094 | Сбор метрик микросервисов |
+| Grafana | 3000 | Визуализация метрик из Prometheus |
+| Zipkin | 9411 | Распределённая трассировка запросов |
 </details>
 
 ## twitter-to-kafka-service
