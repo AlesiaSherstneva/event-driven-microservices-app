@@ -1,6 +1,6 @@
 # event-driven-microservices-app
 
-Я прохожу курс
+Я прошла курс
 [Event-Driven Microservices: Spring Boot, Kafka and Elastic](https://www.udemy.com/course/event-driven-microservices-spring-boot-kafka-and-elasticsearch/)
 на платформе Udemy.com.
 
@@ -9,14 +9,17 @@
 
 ![схема приложения](pictures/app-structure.jpg)
 
-С большинством технологий, которые будут применяться в проекте, я так или иначе знакома. Новыми для меня станут
-Keycloak, Kafka Streams, ELK-stack.
+С большинством технологий в проекте, я так или иначе уже была знакома. Новыми для меня стали
+Keycloak, Kafka Streams, ELK-stack, Prometheus-Grafana, Micrometer-Zipkin.
 
 ## technologies
 
-Курс неактуальный, 2020 года (судя по версии Spring Boot 2.3.4). Прохожу я его летом 2025 года. Писать буду
-на Java 17 и Spring Boot 3.5.0, меняя библиотеки и технологии на ходу. Поэтому готовлюсь много гуглить,
-особенно по работе со Spring Cloud (там чуть ли не все компоненты кардинально поменялись) :smile:.
+Курс неактуальный, 2020 года (судя по версии Spring Boot 2.3.4). Проходила я его с лета 2025 по осень 2026 года, 
+с перерывом на две стажировки. Писала на Java 17 и Spring Boot 3.5.3, меняя библиотеки и технологии на ходу. 
+Пришлось помучиться, много гуглить и консультироваться с нейросетями. Ожидала проблем со Spring&nbsp;Cloud 
+(там чуть ли не все компоненты кардинально поменялись),но по итогу, на моё удивление, больше всего
+проблем было с переходом со Sleuth на Micrometer :smile:. То, что в 2020 году решалось одной библиотекой
+и парой настроек, в 2026 году потребовало дополнительных классов и кропотливой настройки. 
 
 Решила вести таблицу, какие более новые технологии я использовала.
 
@@ -59,7 +62,7 @@ docker-compose up -d
 | Сервис | Порт | Назначение |
 |:-------|:----:|:-----------|
 | config-server | 5007,&nbsp;8888 | Общий сервер конфигураций |
-| discovery-service<br/>(2 instances, peer-to-peer) | 5015,&nbsp;8761<br/>5016,&nbsp;8762 | Реестр микросервисов для их динамической регистрации и обнаружения |
+| discovery-service<br/>(2 instances, peer-to-peer) | 5015,&nbsp;8761<br/>5016,&nbsp;8762 | Реестр микросервисов для их динамической регистрации<br/>и обнаружения |
 | api-gateway | 5017,&nbsp;9090 | Единая точка входа, маршрутизация, Circuit Breaker и Rate Limiting |
 | twitter-to-kafka-service | 5005 | Получение/генерация потока твитов и передача их в Kafka |
 | kafka-to-elastic-service | 5006 | Получение твитов из Kafka, их индексация и передача в Elasticsearch |
@@ -82,7 +85,7 @@ docker-compose up -d
 | Elasticsearch | 9200 | NoSQL база данных для поиска и аналитики |
 | Postgres | 5433 | База данных для Keycloak |
 | Keycloak | 8080 | Сервер аутентификации |
-| Redis | 6379 | NoSQL in-memory база данных для хранения счётчиков Rate Limiter из `api-gateway` |
+| Redis | 6379 | NoSQL in-memory база данных<br/>для хранения счётчиков Rate Limiter из `api-gateway` |
 | Logstash | 5001,&nbsp;9600 | Сбор, парсинг и отправка логов в Elasticsearch |
 | Kibana | 5601 | Веб-интерфейс для централизованного просмотра и анализа логов |
 | Prometheus | 9094 | Сбор метрик микросервисов |
